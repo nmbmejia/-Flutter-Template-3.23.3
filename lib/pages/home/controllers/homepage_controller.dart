@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:projectname/pages/initial/controllers/intial_controller.dart';
+import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 
 enum AppStates { initial, inRoom }
 
@@ -7,6 +7,7 @@ enum AppStates { initial, inRoom }
 class HomePageController extends GetxController {
   InitialController initialController = Get.find<InitialController>();
   RxBool anyDialogOpen = false.obs;
+  RxInt selectedHeader = 0.obs;
 
   @override
   void onInit() {

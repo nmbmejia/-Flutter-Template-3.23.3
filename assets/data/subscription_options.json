@@ -1,0 +1,382 @@
+{
+    "subscriptions" : [
+        {
+            "name" : "Spotify",
+            "icon" : "app-spotify.png",
+            "plans" : [
+                {
+                    "name" : "Mini Plan",
+                    "price" : 26.00
+                },
+                {
+                    "name" : "Individual Plan",
+                    "price" : 149.00
+                },
+                {
+                    "name" : "Duo Plan",
+                    "price" : 199.00
+                },
+                {
+                    "name" : "Family Plan",
+                    "price" : 239.00
+                },
+                {
+                    "name" : "Student Plan",
+                    "price" : 75.00
+                }
+            ]
+        },
+        {
+            "name" : "Adobe Creative Cloud",
+            "icon" : "app-adobe.png",
+            "plans" : [
+                {
+                    "name" : "Adobe Express",
+                    "price" : 499.00
+                },
+                {
+                    "name" : "Photography Plan",
+                    "price" : 498.00
+                },
+                {
+                    "name" : "Single App",
+                    "price" : 995.00
+                },
+                {
+                    "name" : "Creative Cloud All Apps",
+                    "price" : 2642.00
+                }
+            ]
+        },
+        {
+            "name" : "Amazon Prime",
+            "icon" : "app-adobe.png",
+            "plans" : [
+                {
+                    "name" : "Prime Video",
+                    "price" : 149.00
+                }
+            ]
+        },
+        {
+            "name" : "Apple iCloud",
+            "icon" : "app-apple_icloud.png",
+            "plans" : [
+                {
+                    "name" : "50GB",
+                    "price" : 59.00
+                },
+                {
+                    "name" : "200GB",
+                    "price" : 219.00
+                },
+                {
+                    "name" : "2TB",
+                    "price" : 599.00
+                }
+            ]
+        },
+        {
+            "name" : "Apple Music",
+            "icon" : "app-apple_music.png",
+            "plans" : [
+                {
+                    "name" : "Student",
+                    "price" : 75.00
+                },
+                {
+                    "name" : "Individual",
+                    "price" : 139.00
+                },
+                {
+                    "name" : "Family",
+                    "price" : 219.00
+                }
+            ]
+        },
+        {
+            "name" : "Apple TV+",
+            "icon" : "app-apple_music.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 369.00
+                }
+            ]
+        },
+        {
+            "name" : "Apple One",
+            "icon" : "app-apple.png",
+            "plans" : [
+                {
+                    "name" : "Individual",
+                    "price" : 449.00
+                },
+                {
+                    "name" : "Family",
+                    "price" : 579.00
+                }
+            ]
+        },
+        {
+            "name" : "Canva",
+            "icon" : "app-canva.png",
+            "plans" : [
+                {
+                    "name" : "Canva Pro",
+                    "price" : 299.00
+                }
+            ]
+        },
+        {
+            "name" : "Disney Plus",
+            "icon" : "app-disney.png",
+            "plans" : [
+                {
+                    "name" : "Basic",
+                    "price" : 249.00
+                },
+                {
+                    "name" : "Premium",
+                    "price" : 519.00
+                }
+            ]
+        },
+        {
+            "name" : "Duolingo",
+            "icon" : "app-duolingo.png",
+            "plans" : [
+                {
+                    "name" : "Super",
+                    "price" : 740.00
+                },
+                {
+                    "name" : "Super Family",
+                    "price" : 554.00
+                }
+            ]
+        },
+        {
+            "name" : "Foodpanda",
+            "icon" : "app-foodpanda.png",
+            "plans" : [
+                {
+                    "name" : "Pro",
+                    "price" : 199.00
+                }
+            ]
+        },
+        {
+            "name" : "Google Drive",
+            "icon" : "app-google_drive.png",
+            "plans" : [
+                {
+                    "name" : "100GB",
+                    "price" : 89.00
+                },
+                {
+                    "name" : "200GB",
+                    "price" : 149.00
+                },
+                {
+                    "name" : "2TB",
+                    "price" : 479.00
+                },
+                {
+                    "name" : "10TB",
+                    "price" : 4799.00
+                },
+                {
+                    "name" : "20TB",
+                    "price" : 9599.00
+                },
+                {
+                    "name" : "30TB",
+                    "price" : 14399.00
+                }
+            ]
+        },
+        {
+            "name" : "Google One",
+            "icon" : "app-google.png",
+            "plans" : [
+                {
+                    "name" : "100GB",
+                    "price" : 89.00
+                },
+                {
+                    "name" : "200GB",
+                    "price" : 149.00
+                },
+                {
+                    "name" : "2TB",
+                    "price" : 479.00
+                },
+                {
+                    "name" : "10TB",
+                    "price" : 4799.00
+                },
+                {
+                    "name" : "20TB",
+                    "price" : 9599.00
+                },
+                {
+                    "name" : "30TB",
+                    "price" : 14399.00
+                }
+            ]
+        },
+        {
+            "name" : "Grab",
+            "icon" : "app-grab.png",
+            "plans" : [
+                {
+                    "name" : "GrabUnlimited",
+                    "price" : 88.00
+                }
+            ]
+        },
+        {
+            "name" : "HBO Go",
+            "icon" : "app-hbo.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 199.00
+                }
+            ]
+        },
+        {
+            "name" : "Iflix",
+            "icon" : "app-iflix.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 129.00
+                }
+            ]
+        },
+        {
+            "name" : "Loklok",
+            "icon" : "app-loklok.png",
+            "plans" : [
+                {
+                    "name" : "VIP Subscription",
+                    "price" : 129.00
+                }
+            ]
+        },
+        {
+            "name" : "Netflix",
+            "icon" : "app-netflix.png",
+            "plans" : [
+                {
+                    "name" : "Mobile Plan",
+                    "price" : 149.00
+                },
+                {
+                    "name" : "Basic Plan",
+                    "price" : 249.00
+                },
+                {
+                    "name" : "Standard Plan",
+                    "price" : 399.00
+                },
+                {
+                    "name" : "Premium Plan",
+                    "price" : 549.00
+                }
+            ]
+        },
+        {
+            "name" : "Microsoft Office 365",
+            "icon" : "app-office365.png",
+            "plans" : [
+                {
+                    "name" : "Personal",
+                    "price" : 349.00
+                },
+                {
+                    "name" : "Family",
+                    "price" : 469.00
+                }
+            ]
+        },
+        {
+            "name" : "PlayStation Plus",
+            "icon" : "app-playstation.png",
+            "plans" : [
+                {
+                    "name" : "PlayStation Plus Essential",
+                    "price" : 499.00
+                },
+                {
+                    "name" : "PlayStation Plus Extra",
+                    "price" : 649.00
+                },
+                {
+                    "name" : "PlayStation Plus Premium",
+                    "price" : 799.00
+                }
+            ]
+        },
+        {
+            "name" : "ScribD",
+            "icon" : "app-scribd.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 449.00
+                }
+            ]
+        },
+        {
+            "name" : "Telegram",
+            "icon" : "app-telegram.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 299.00
+                }
+            ]
+        },
+        {
+            "name" : "Viu",
+            "icon" : "app-viu.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 129.00
+                }
+            ]
+        },
+        {
+            "name" : "Vivamax",
+            "icon" : "app-vivamax.png",
+            "plans" : [
+                {
+                    "name" : "Premium",
+                    "price" : 169.00
+                }
+            ]
+        },
+        {
+            "name" : "Youtube Premium",
+            "icon" : "app-youtube_premium.png",
+            "plans" : [
+                {
+                    "name" : "Individual",
+                    "price" : 189.00
+                },
+                {
+                    "name" : "Student",
+                    "price" : 115.00
+                },
+                {
+                    "name" : "Family",
+                    "price" : 379.00
+                }
+            ]
+        }
+    ]
+}

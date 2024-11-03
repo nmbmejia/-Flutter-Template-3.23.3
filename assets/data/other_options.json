@@ -1,0 +1,131 @@
+{
+    "others" : [
+        {
+            "name" : "Bills",
+            "icon" : "other-bills.png",
+            "plans" : [
+                {
+                    "name" : "Electricity",
+                    "price" : null
+                },
+                {
+                    "name" : "Educational",
+                    "price" : null
+                },
+                {
+                    "name" : "Internet",
+                    "price" : null
+                },
+                {
+                    "name" : "Water",
+                    "price" : null
+                },
+                {
+                    "name" : "Mobile Postpaid",
+                    "price" : null
+                },
+                {
+                    "name" : "Cable/TV",
+                    "price" : null
+                },
+                {
+                    "name" : "Homeowners",
+                    "price" : null
+                },
+                {
+                    "name" : "Condo",
+                    "price" : null
+                },
+                {
+                    "name" : "Health Insurance",
+                    "price" : null
+                },
+                {
+                    "name" : "Philhealth",
+                    "price" : null
+                },
+                {
+                    "name" : "SSS",
+                    "price" : null
+                },
+                {
+                    "name" : "Pag-ibig/HDMF",
+                    "price" : null
+                },
+                {
+                    "name" : "Pag-ibig/HDMF",
+                    "price" : null
+                },
+                {
+                    "name" : "Loan Repayment",
+                    "price" : null
+                }
+            ]
+        },
+        {
+            "name" : "Gas/Fuel",
+            "icon" : "other-gas.png",
+            "plans" : null
+        },
+        {
+            "name" : "Food & Dining",
+            "icon" : "other-food.png"
+        },
+        {
+            "name" : "Groceries",
+            "icon" : "other-grocery.png"
+        },
+        {
+            "name" : "Transportation",
+            "icon" : "other-transpo.png"
+        },
+        {
+            "name" : "Health",
+            "icon" : "other-health.png"
+        },
+        {
+            "name" : "Gym & Fitness",
+            "icon" : "other-fitness.png"
+        },
+        {
+            "name" : "Personal Care",
+            "icon" : "other-personal.png"
+        },
+        {
+            "name" : "Event",
+            "icon" : "other-events.png"
+        },
+        {
+            "name" : "Outing",
+            "icon" : "other-outing.png"
+        },
+        {
+            "name" : "Shopping",
+            "icon" : "other-shopping.png"
+        },
+        {
+            "name" : "Payment",
+            "icon" : "other-payment.png"
+        },
+        {
+            "name" : "Savings",
+            "icon" : "other-savings.png"
+        },
+        {
+            "name" : "Travel",
+            "icon" : "other-travel.png"
+        },
+        {
+            "name" : "Gift",
+            "icon" : "other-gifts.png"
+        },
+        {
+            "name" : "Pets",
+            "icon" : "other-pets.png"
+        },
+        {
+            "name" : "Others",
+            "icon" : "others.png"
+        }
+    ]
+}

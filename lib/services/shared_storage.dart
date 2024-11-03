@@ -1,57 +1,65 @@
+import 'dart:convert';
+
+import 'package:Acorn/models/personal_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedStorage {
-  static const _lastName = 'lastName';
-  static const _firstName = 'firstName';
-  static const _phoneNumber = 'phoneNumber';
-  static const _lastJoinedRoom = 'lastJoinedRoom';
+  static const _firstAppRun = 'firstAppRun';
+  static const _personalData = 'personalData';
 
-  static deleteLastJoinedRoom() async {
+  static savePersonalData(PersonalDataModel personalData) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.remove(_lastJoinedRoom);
+    pref.setString(_personalData, personalDataModelToJson(personalData));
   }
 
-  static saveLastJoinedRoom(String lastJoinedRoom) async {
+  static Future<PersonalDataModel?> getPersonalData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(_lastJoinedRoom, lastJoinedRoom);
+    String? jsonString = pref.getString(_personalData);
+    PersonalDataModel? personalData =
+        jsonString == null ? null : personalDataModelFromJson(jsonString);
+    return personalData;
   }
 
-  static Future<String?> getLastJoinedRoom() async {
+  static setfirstAppRun() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? lastJoinedRoom = pref.getString(_lastJoinedRoom);
-    return lastJoinedRoom;
+    pref.setBool(_firstAppRun, true);
   }
 
-  static savePhoneNumber(String phoneNumber) async {
+  static Future<bool> isFirstAppRun() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(_phoneNumber, phoneNumber);
+    bool firstAppRun = pref.getBool(_firstAppRun) ?? false;
+    return firstAppRun;
   }
 
-  static Future<String?> getPhoneNumber() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? phoneNumber = pref.getString(_phoneNumber);
-    return phoneNumber;
-  }
+  // static deleteLastJoinedRoom() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   pref.remove(_lastJoinedRoom);
+  // }
 
-  static saveFirstName(String firstName) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(_firstName, firstName);
-  }
+  // static saveLastJoinedRoom(String lastJoinedRoom) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   pref.setString(_lastJoinedRoom, lastJoinedRoom);
+  // }
 
-  static Future<String?> getFirstName() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? firstName = pref.getString(_firstName);
-    return firstName;
-  }
+  // static savePhoneNumber(String phoneNumber) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   pref.setString(_phoneNumber, phoneNumber);
+  // }
 
-  static saveLastName(String lastName) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(_lastName, lastName);
-  }
+  // static Future<String?> getPhoneNumber() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   String? phoneNumber = pref.getString(_phoneNumber);
+  //   return phoneNumber;
+  // }
 
-  static Future<String?> getLastName() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? lastName = pref.getString(_lastName);
-    return lastName;
-  }
+  // static saveLastName(String lastName) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   pref.setString(_lastName, lastName);
+  // }
+
+  // static Future<String?> getLastName() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   String? lastName = pref.getString(_lastName);
+  //   return lastName;
+  // }
 }

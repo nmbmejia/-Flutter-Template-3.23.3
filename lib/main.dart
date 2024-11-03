@@ -2,7 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
-import 'package:projectname/pages/initial/initial.dart';
+import 'package:Acorn/pages/initial/initial.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 //  fvm flutter pub global run rename setAppName --value "projectname"  --rename package
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StyledToast(
-      locale: const Locale('en', 'US'),
+      locale: const Locale('fil', ''),
       child: GetMaterialApp(
         scrollBehavior: const MaterialScrollBehavior().copyWith(
           dragDevices: {
@@ -26,10 +27,19 @@ class MyApp extends StatelessWidget {
             PointerDeviceKind.unknown
           },
         ),
-        title: 'Flutter Demo',
+        supportedLocales: const [
+          Locale('fil', ''),
+          Locale('en', 'PH'),
+          Locale('en', 'US'),
+          Locale('fr', 'FR'),
+          Locale('es', 'ES'),
+        ],
+        title: 'Acorn',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: 'OpenSans',
+          textTheme: GoogleFonts.latoTextTheme(
+            Theme.of(context)
+                .textTheme, // If this is not set, then ThemeData.light().textTheme is used.
+          ),
         ),
         home: const InitialPage(),
       ),

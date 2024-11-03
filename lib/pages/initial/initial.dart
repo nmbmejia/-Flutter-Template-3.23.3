@@ -1,9 +1,12 @@
+import 'package:Acorn/pages/add/controllers/add_controller.dart';
+import 'package:Acorn/pages/home/homepage.dart';
+import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
+import 'package:Acorn/services/app_colors.dart';
+import 'package:Acorn/services/custom_text.dart';
+import 'package:Acorn/services/loader.dart';
+import 'package:Acorn/services/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:projectname/pages/initial/controllers/intial_controller.dart';
-import 'package:projectname/services/app_colors.dart';
-import 'package:projectname/services/strings.dart';
-import 'package:projectname/widgets/standard_button.dart';
 
 class InitialPage extends StatefulWidget {
   const InitialPage({super.key});
@@ -17,38 +20,23 @@ class _InitialPageState extends State<InitialPage> {
 
   @override
   void initState() {
+    initialController.redirect(1);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: Container(
-            color: AppColors.primaryColor,
-            child: Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(Strings.appName,
-                    style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: 45,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -3)),
-                Text(Strings.appSubtitle,
-                    style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                        letterSpacing: -0.5)),
-                customButton(Strings.beginBtn,
-                    onPressed: () =>
-                        initialController.checkUserDetailsIfExists()),
-              ],
-            )),
-          ),
-        ));
+        body: Container(
+      color: AppColors.primaryColor,
+      child: Center(
+          child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Custom.header1(Strings.appName),
+          const LoaderWidget(),
+        ],
+      )),
+    ));
   }
 }

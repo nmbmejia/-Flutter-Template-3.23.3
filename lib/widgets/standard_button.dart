@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:projectname/services/app_colors.dart';
+import 'package:Acorn/services/app_colors.dart';
 
 Widget customButton(String text,
     {double? width,
