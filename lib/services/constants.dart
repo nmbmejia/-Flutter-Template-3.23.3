@@ -6,3 +6,5 @@ class Constants {
   static int pageAnimations = 400;
   static double circularProgressIndicatorStroke = 2.5;
 }
+
+enum SkillLevel { beginner, intermediate, advanced }

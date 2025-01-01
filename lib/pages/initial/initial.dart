@@ -1,10 +1,6 @@
-import 'package:Acorn/pages/add/controllers/add_controller.dart';
-import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
-import 'package:Acorn/services/app_colors.dart';
-import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/loader.dart';
-import 'package:Acorn/services/strings.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,23 +16,44 @@ class _InitialPageState extends State<InitialPage> {
 
   @override
   void initState() {
-    initialController.redirect(1);
+    initialController.redirect(kDebugMode ? 1 : 3);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      color: AppColors.primaryColor,
-      child: Center(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
+      body: Stack(
         children: [
-          Custom.header1(Strings.appName),
-          const LoaderWidget(),
+          // Background image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Semi-transparent overlay
+          Container(
+            color: Colors.black.withOpacity(0.5), // Darken the background
+          ),
+          // Foreground content
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: MediaQuery.of(context).size.width *
+                      0.8, // Adjust logo size as needed
+                ),
+                const LoaderWidget(),
+              ],
+            ),
+          ),
         ],
-      )),
-    ));
+      ),
+    );
   }
 }

@@ -66,6 +66,10 @@ cupertino_icons
 3.1
 file:///Users/neil/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.8/
 file:///Users/neil/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.8/lib/
+date_picker_plus
+2.18
+file:///Users/neil/.pub-cache/hosted/pub.dev/date_picker_plus-4.1.0/
+file:///Users/neil/.pub-cache/hosted/pub.dev/date_picker_plus-4.1.0/lib/
 device_info
 2.12
 file:///Users/neil/.pub-cache/hosted/pub.dev/device_info-2.0.3/
@@ -86,6 +90,10 @@ easy_debounce
 2.12
 file:///Users/neil/.pub-cache/hosted/pub.dev/easy_debounce-2.0.3/
 file:///Users/neil/.pub-cache/hosted/pub.dev/easy_debounce-2.0.3/lib/
+easy_stepper
+2.16
+file:///Users/neil/.pub-cache/hosted/pub.dev/easy_stepper-0.8.5+1/
+file:///Users/neil/.pub-cache/hosted/pub.dev/easy_stepper-0.8.5+1/lib/
 expandable_page_view
 2.17
 file:///Users/neil/.pub-cache/hosted/pub.dev/expandable_page_view-1.0.17/
@@ -448,8 +456,8 @@ file:///Users/neil/.pub-cache/hosted/pub.dev/yaml-3.1.2/
 file:///Users/neil/.pub-cache/hosted/pub.dev/yaml-3.1.2/lib/
 Acorn
 3.5
-file:///Users/neil/Desktop/Code/com.dilaab.acorn/
-file:///Users/neil/Desktop/Code/com.dilaab.acorn/lib/
+file:///Users/neil/Desktop/Code/com.garmentech.pro/
+file:///Users/neil/Desktop/Code/com.garmentech.pro/lib/
 sky_engine
 3.2
 file:///Users/neil/fvm/versions/3.24.3/bin/cache/pkg/sky_engine/

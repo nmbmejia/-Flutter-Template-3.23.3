@@ -1,0 +1,1 @@
+ /Users/neil/Desktop/Code/com.garmentech.pro/.dart_tool/flutter_build/d18115f1161cf3a06fa508d36d6c8506/native_assets.yaml: 

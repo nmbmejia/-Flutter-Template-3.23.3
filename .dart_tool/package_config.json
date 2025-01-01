@@ -104,6 +104,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "date_picker_plus",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/date_picker_plus-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "device_info",
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/device_info-2.0.3",
       "packageUri": "lib/",
@@ -132,6 +138,12 @@
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/easy_debounce-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "easy_stepper",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/easy_stepper-0.8.5+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
     },
     {
       "name": "expandable_page_view",
@@ -710,7 +722,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2024-11-03T08:57:00.333810Z",
+  "generated": "2024-12-24T09:50:06.078354Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///Users/neil/fvm/versions/3.24.3",

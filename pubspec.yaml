@@ -38,6 +38,8 @@ dependencies:
   expandable_page_view: ^1.0.17
   crazy_button: ^1.0.3
   shake_detector: ^0.1.2
+  easy_stepper: ^0.8.5+1
+  date_picker_plus: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -59,8 +61,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icon/
-    - assets/data/subscription_options.json
-    - assets/data/other_options.json
 
   fonts:
     - family: OpenSans

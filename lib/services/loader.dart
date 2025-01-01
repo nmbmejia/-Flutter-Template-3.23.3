@@ -14,7 +14,7 @@ class _LoaderWidgetState extends State<LoaderWidget> {
     return Container(
       margin: const EdgeInsets.all(15),
       child: const CircularProgressIndicator(
-        strokeWidth: 2.0,
+        strokeWidth: 3.0,
         color: AppColors.whiteColor,
       ),
     );

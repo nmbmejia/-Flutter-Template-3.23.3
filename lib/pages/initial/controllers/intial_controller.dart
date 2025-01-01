@@ -1,13 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:Acorn/models/app_data_model.dart';
 import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
-import 'package:Acorn/services/shared_storage.dart';
-import 'package:Acorn/services/strings.dart';
+import 'package:Acorn/pages/initial/startup.dart';
+import 'package:Acorn/services/constants.dart';
+import 'package:Acorn/widgets/custom_snackbar.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -31,112 +32,111 @@ class InitialController extends GetxController {
   final Rx<AppDataModel> appData =
       Rx<AppDataModel>(AppDataModel(services: [], periods: []));
 
+  // Onboarding
+
+  late PageController pageController;
+
+  //? STEP 1
+  RxInt activeStep = 0.obs;
+  RxnString name = RxnString(null);
+  Rxn<DateTime> birthDate = Rxn<DateTime>(null);
+  final RxList<bool> selectedSkill = [false, false, false].obs;
+
+  //? STEP 2 && Login
+  RxnString email = RxnString(null);
+  RxnString password = RxnString(null);
+  RxnString confirmPassword = RxnString(null);
+
   @override
   void onInit() {
-    checkPermissions();
-    getUserData();
-    fetchPeriods();
-    fetchSubscriptionOptions();
-
+    pageController = PageController(initialPage: 0);
     super.onInit();
-  }
-
-  void fetchSubscriptionOptions() async {
-    subscriptionOptionsData =
-        await rootBundle.loadString('assets/data/subscription_options.json');
-    Map<String, dynamic> subscriptionOptions =
-        jsonDecode(subscriptionOptionsData);
-    List<Service> services =
-        subscriptionOptions['subscriptions'].map<Service>((option) {
-      return Service.fromJson(option);
-    }).toList();
-    appData.value.services?.addAll(services);
-    fetchOtherptions();
-  }
-
-  void fetchOtherptions() async {
-    otherOptionsData =
-        await rootBundle.loadString('assets/data/other_options.json');
-    Map<String, dynamic> otherOptions = jsonDecode(otherOptionsData);
-    List<Service> others = otherOptions['others'].map<Service>((option) {
-      return Service.fromJson(option);
-    }).toList();
-    appData.value.services?.addAll(others);
-    (appData.value.services ?? [])
-        .sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
-  }
-
-  void fetchPeriods() async {
-    Map<String, dynamic> periods = {
-      "periods": [
-        {"name": Strings.oneTime},
-        {"name": Strings.everyMonth},
-        {"name": Strings.everyYear},
-      ]
-    };
-    appData.value.periods = periods['periods']
-        .map<Period>((period) => Period.fromJson(period))
-        .toList();
-  }
-
-  Future<void> getUserData() async {
-    personalData.value = await SharedStorage.getPersonalData() ??
-        PersonalDataModel(user: User(), subscribedServices: []);
-  }
-
-  double getTotal() {
-    return (personalData.value.subscribedServices ?? [])
-        .fold(0, (sum, item) => sum.toDouble() + item.price);
-  }
-
-  void checkPermissions() async {}
-
-  void checkUserDetailsIfExists() async {
-    // firstName.value = await SharedStorage.getFirstName() ?? '';
-    // lastName.value = await SharedStorage.getLastName() ?? '';
-    // contactNumber.value = await SharedStorage.getPhoneNumber() ?? '';
-    // if (firstName.value.isNotEmpty &&
-    //     lastName.value.isNotEmpty &&
-    //     contactNumber.value.isNotEmpty) {
-    //   Get.to(const PermissionManagerPage());
-    // } else {
-    //   Get.to(const QuestionnairePage());
-    // }
-  }
-
-  Future<void> saveUserDetails() async {
-    // String _firstName = firstNameTextController.text;
-    // String _lastName = lastNameTextController.text;
-    // String _contactNumber = contactTextController.text;
-    // if (_firstName.isNotEmpty &&
-    //     _lastName.isNotEmpty &&
-    //     _contactNumber.isNotEmpty) {
-    //   if (_contactNumber.length == 11 &&
-    //       (_contactNumber.split('')[0] == '0' &&
-    //           _contactNumber.split('')[1] == '9')) {
-    //     firstName.value = _firstName;
-    //     lastName.value = _lastName;
-    //     contactNumber.value = _contactNumber;
-    //     await SharedStorage.saveFirstName(_firstName);
-    //     await SharedStorage.saveLastName(_lastName);
-    //     await SharedStorage.savePhoneNumber(_contactNumber);
-    //     Get.to(const PermissionManagerPage());
-    //   } else {
-    //     CustomSnackbar().simple('Contact number is invalid.');
-    //   }
-    // } else {
-    //   CustomSnackbar().simple('Please fill out all fields.');
-    // }
   }
 
   void redirect(int seconds) {
     Future.delayed(Duration(seconds: seconds), () {
-      Get.offAll(const HomePage());
+      Get.offAll(const StartupWidget());
     });
+  }
+
+  Future<void> getDate(BuildContext context) async {
+    await showRangePickerDialog(
+      context: context,
+      minDate: DateTime(1960, 1, 1),
+      maxDate: DateTime.now(),
+    );
   }
 
   void goToHomePage() {
     Get.offAll(const HomePage());
+  }
+
+  void reinitializeOnboarding() {
+    activeStep.value = 0;
+    name.value = null;
+    birthDate.value = null;
+    email.value = null;
+    password.value = null;
+    confirmPassword.value = null;
+    for (int i = 0; i < selectedSkill.length; i++) {
+      selectedSkill[i] = false;
+    }
+  }
+
+  void reinitializeLogin() {
+    email.value = null;
+    password.value = null;
+  }
+
+  void nextOnboardingStep() {
+    if (activeStep.value == 0) {
+      if ((name.value ?? '').isEmpty) {
+        CustomSnackbar().simple('Name cannot be blank');
+        return;
+      }
+      if (birthDate.value == null) {
+        CustomSnackbar().simple('Birthdate cannot be blank');
+        return;
+      }
+      if (!selectedSkill.contains(true)) {
+        CustomSnackbar().simple('Skill level cannot be blank');
+        return;
+      }
+
+      activeStep.value = 1;
+      pageController.animateToPage(1,
+          duration: Duration(milliseconds: Constants.appAnimations),
+          curve: Curves.fastLinearToSlowEaseIn);
+    } else if (activeStep.value == 1) {
+      if ((email.value ?? '').isEmpty) {
+        CustomSnackbar().simple('Email cannot be blank');
+        return;
+      }
+      if ((password.value ?? '').isEmpty) {
+        CustomSnackbar().simple('Password cannot be blank');
+        return;
+      }
+      if ((confirmPassword.value ?? '').isEmpty) {
+        CustomSnackbar().simple('Confirm password cannot be blank');
+        return;
+      }
+      if ((password.value ?? '') != (confirmPassword.value ?? '')) {
+        CustomSnackbar().simple('Passwords are not the same');
+        return;
+      }
+    }
+  }
+
+  void login() {
+    if ((email.value ?? '').isEmpty) {
+      CustomSnackbar().simple('Email cannot be blank');
+      return;
+    }
+    if ((password.value ?? '').isEmpty) {
+      CustomSnackbar().simple('Password cannot be blank');
+      return;
+    }
+    CustomSnackbar().simple('Logged in as $email');
   }
 
   void closeApp() {
