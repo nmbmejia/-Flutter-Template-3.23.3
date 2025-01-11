@@ -47,9 +47,10 @@ class Custom {
   }
 
   static Text body1(String txt,
-      {Color color = colorDefault, bool isBold = false}) {
+      {Color color = colorDefault, bool isBold = false, TextAlign? textAlign}) {
     return Text(
       txt,
+      textAlign: textAlign,
       style: TextStyle(
           color: color,
           fontSize: 14,

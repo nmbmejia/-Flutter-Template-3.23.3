@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50054828139",
+    "project_id": "garmenttech-27ae4",
+    "storage_bucket": "garmenttech-27ae4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50054828139:android:4735178be69ea5e2cee12e",
+        "android_client_info": {
+          "package_name": "com.garmenttech.pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDixKgVj26wLL9qlCFopdweeFbo67zt-XM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

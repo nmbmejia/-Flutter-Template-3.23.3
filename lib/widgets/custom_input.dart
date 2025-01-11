@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CustomInput extends StatefulWidget {
   const CustomInput(
@@ -32,6 +31,7 @@ class _CustomInputState extends State<CustomInput> {
             widget.onTextChanged!(text);
           }
         },
+        textAlignVertical: TextAlignVertical.center,
         controller: TextEditingController(),
         obscureText: widget.obscureText,
         cursorColor: Colors.black87,
@@ -47,9 +47,12 @@ class _CustomInputState extends State<CustomInput> {
               fontSize: 24,
               fontWeight: FontWeight.w400),
           prefixIcon: widget.prefixIcon != null
-              ? Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: widget.prefixIcon,
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 5, right: 10, left: 5),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: widget.prefixIcon,
+                  ),
                 )
               : null,
           // suffixIcon: GestureDetector(

@@ -6,8 +6,8 @@ enum AppStates { initial, inRoom }
 // ignore: must_be_immutable
 class HomePageController extends GetxController {
   InitialController initialController = Get.find<InitialController>();
-  RxBool anyDialogOpen = false.obs;
-  RxInt selectedHeader = 0.obs;
+  final RxList<bool> selectedAccount = [true, false].obs;
+  final RxBool isAdmin = true.obs;
 
   @override
   void onInit() {

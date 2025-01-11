@@ -7,6 +7,7 @@ import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/pages/initial/startup.dart';
 import 'package:Acorn/services/constants.dart';
+import 'package:Acorn/services/go.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
@@ -137,6 +138,7 @@ class InitialController extends GetxController {
       return;
     }
     CustomSnackbar().simple('Logged in as $email');
+    Go.offAll(const HomePage());
   }
 
   void closeApp() {
