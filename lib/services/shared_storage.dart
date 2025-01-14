@@ -1,24 +1,23 @@
 import 'dart:convert';
 
-import 'package:Acorn/models/personal_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedStorage {
   static const _firstAppRun = 'firstAppRun';
   static const _personalData = 'personalData';
 
-  static savePersonalData(PersonalDataModel personalData) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(_personalData, personalDataModelToJson(personalData));
-  }
+  // static savePersonalData(PersonalDataModel personalData) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   pref.setString(_personalData, personalDataModelToJson(personalData));
+  // }
 
-  static Future<PersonalDataModel?> getPersonalData() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? jsonString = pref.getString(_personalData);
-    PersonalDataModel? personalData =
-        jsonString == null ? null : personalDataModelFromJson(jsonString);
-    return personalData;
-  }
+  // static Future<PersonalDataModel?> getPersonalData() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   String? jsonString = pref.getString(_personalData);
+  //   PersonalDataModel? personalData =
+  //       jsonString == null ? null : personalDataModelFromJson(jsonString);
+  //   return personalData;
+  // }
 
   static setfirstAppRun() async {
     SharedPreferences pref = await SharedPreferences.getInstance();

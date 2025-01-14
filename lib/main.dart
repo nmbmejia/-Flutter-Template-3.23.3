@@ -1,3 +1,5 @@
+import 'package:Acorn/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -6,7 +8,12 @@ import 'package:Acorn/pages/initial/initial.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //  fvm flutter pub global run rename setAppName --value "projectname"  --rename package
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 

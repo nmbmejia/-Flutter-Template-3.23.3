@@ -86,6 +86,24 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cloud_firestore",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/cloud_firestore-5.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "cloud_firestore_platform_interface",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-6.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "cloud_firestore_web",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/cloud_firestore_web-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "collection",
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
@@ -122,6 +140,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "desktop_webview_auth",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/desktop_webview_auth-0.0.15",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "device_info",
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/device_info-2.0.3",
       "packageUri": "lib/",
@@ -156,6 +180,12 @@
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/easy_stepper-0.8.5+1",
       "packageUri": "lib/",
       "languageVersion": "2.16"
+    },
+    {
+      "name": "email_validator",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/email_validator-2.1.17",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "equatable",
@@ -230,6 +260,42 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "firebase_dynamic_links",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/firebase_dynamic_links-6.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_dynamic_links_platform_interface",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/firebase_dynamic_links_platform_interface-0.2.6+41",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "firebase_ui_auth",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/firebase_ui_auth-1.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_ui_localizations",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/firebase_ui_localizations-1.13.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_ui_oauth",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/firebase_ui_oauth-1.5.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "firebase_ui_shared",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/firebase_ui_shared-1.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "fixnum",
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/fixnum-1.1.0",
       "packageUri": "lib/",
@@ -264,6 +330,12 @@
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/flutter_styled_toast-2.2.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter_svg",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/flutter_svg-2.0.17",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
     },
     {
       "name": "flutter_test",
@@ -426,6 +498,12 @@
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/path-1.9.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "path_parsing",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/path_parsing-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "path_provider",
@@ -734,6 +812,24 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "vector_graphics",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/vector_graphics-1.1.15",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "vector_graphics_codec",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.13",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "vector_graphics_compiler",
+      "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.16",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///Users/neil/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
@@ -788,7 +884,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2025-01-11T16:32:26.060957Z",
+  "generated": "2025-01-14T23:28:17.222180Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///Users/neil/fvm/versions/3.24.3",

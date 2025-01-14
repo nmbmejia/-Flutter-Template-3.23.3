@@ -1,40 +1,24 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 import 'dart:async';
 import 'dart:io';
-
-import 'package:Acorn/models/app_data_model.dart';
-import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
-import 'package:Acorn/pages/initial/startup.dart';
+import 'package:Acorn/pages/initial/auth.dart';
 import 'package:Acorn/services/constants.dart';
+import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/go.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class InitialController extends GetxController {
-  late String subscriptionOptionsData;
-  late String otherOptionsData;
-
-  TextEditingController firstNameTextController = TextEditingController();
-  TextEditingController lastNameTextController = TextEditingController();
-  TextEditingController contactTextController = TextEditingController();
-
-  // Local user data
-  RxString firstName = ''.obs;
-  RxString lastName = ''.obs;
-  RxString contactNumber = ''.obs;
-
-  final Rx<PersonalDataModel> personalData =
-      Rx<PersonalDataModel>(PersonalDataModel());
-  final Rx<AppDataModel> appData =
-      Rx<AppDataModel>(AppDataModel(services: [], periods: []));
+  // User related
+  UserCredential? loggedUser;
 
   // Onboarding
-
   late PageController pageController;
 
   //? STEP 1
@@ -56,7 +40,7 @@ class InitialController extends GetxController {
 
   void redirect(int seconds) {
     Future.delayed(Duration(seconds: seconds), () {
-      Get.offAll(const StartupWidget());
+      Get.offAll(const AuthGate());
     });
   }
 
@@ -89,7 +73,7 @@ class InitialController extends GetxController {
     password.value = null;
   }
 
-  void nextOnboardingStep() {
+  Future<void> nextOnboardingStep() async {
     if (activeStep.value == 0) {
       if ((name.value ?? '').isEmpty) {
         CustomSnackbar().simple('Name cannot be blank');
@@ -125,10 +109,25 @@ class InitialController extends GetxController {
         CustomSnackbar().simple('Passwords are not the same');
         return;
       }
+
+      List<String> skills = ['Beginner', 'Intermediate', 'Advanced'];
+      String selectedSkillString =
+          skills[selectedSkill.indexWhere((sel) => true)];
+
+      loggedUser = await AuthService().registerWithEmailAndPassword(
+          email.value ?? '',
+          password.value ?? '',
+          name.value ?? '',
+          birthDate.value ?? DateTime.now(),
+          selectedSkillString);
+      if (loggedUser != null) {
+        CustomSnackbar().simple('Logged in as ${email.value}');
+        Go.offAll(const HomePage());
+      }
     }
   }
 
-  void login() {
+  Future<void> login() async {
     if ((email.value ?? '').isEmpty) {
       CustomSnackbar().simple('Email cannot be blank');
       return;
@@ -137,8 +136,12 @@ class InitialController extends GetxController {
       CustomSnackbar().simple('Password cannot be blank');
       return;
     }
-    CustomSnackbar().simple('Logged in as $email');
-    Go.offAll(const HomePage());
+    loggedUser = await AuthService()
+        .signInWithEmailAndPassword(email.value ?? '', password.value ?? '');
+    if (loggedUser != null) {
+      CustomSnackbar().simple('Logged in as ${email.value}');
+      Go.offAll(const HomePage());
+    }
   }
 
   void closeApp() {

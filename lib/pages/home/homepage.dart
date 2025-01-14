@@ -1,8 +1,11 @@
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/home/pages/admin.dart';
 import 'package:Acorn/pages/home/pages/default.dart';
+import 'package:Acorn/pages/initial/auth.dart';
+import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/spacings.dart';
+import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,10 +40,17 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Custom.header3('Hi, Neil', color: Colors.black87),
-                        const Icon(
-                          CupertinoIcons.profile_circled,
-                          size: 48,
-                          color: Colors.black87,
+                        GestureDetector(
+                          onTap: () async {
+                            CustomSnackbar().simple('Logged out.');
+                            await AuthService().signOut();
+                            Get.offAll(const AuthGate());
+                          },
+                          child: const Icon(
+                            CupertinoIcons.profile_circled,
+                            size: 48,
+                            color: Colors.black87,
+                          ),
                         )
                       ],
                     ),

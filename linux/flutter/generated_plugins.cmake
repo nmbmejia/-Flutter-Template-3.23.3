@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_webview_auth
   holdable_button
   platform_device_id_linux
   url_launcher_linux
