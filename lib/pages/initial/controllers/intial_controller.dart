@@ -1,10 +1,12 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 import 'dart:async';
 import 'dart:io';
+import 'package:Acorn/models/user_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/pages/initial/auth.dart';
 import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/firebase/auth_service.dart';
+import 'package:Acorn/services/firestore/user_firestore_service.dart';
 import 'package:Acorn/services/go.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
@@ -16,7 +18,8 @@ import 'package:get/get.dart';
 // ignore: must_be_immutable
 class InitialController extends GetxController {
   // User related
-  UserCredential? loggedUser;
+  UserCredential? loggedUser; // null if loggedInAlready
+  UserModel? loggedUserDetails;
 
   // Onboarding
   late PageController pageController;
@@ -50,10 +53,6 @@ class InitialController extends GetxController {
       minDate: DateTime(1960, 1, 1),
       maxDate: DateTime.now(),
     );
-  }
-
-  void goToHomePage() {
-    Get.offAll(const HomePage());
   }
 
   void reinitializeOnboarding() {
@@ -120,10 +119,7 @@ class InitialController extends GetxController {
           name.value ?? '',
           birthDate.value ?? DateTime.now(),
           selectedSkillString);
-      if (loggedUser != null) {
-        CustomSnackbar().simple('Logged in as ${email.value}');
-        Go.offAll(const HomePage());
-      }
+      goToHomePage();
     }
   }
 
@@ -138,10 +134,14 @@ class InitialController extends GetxController {
     }
     loggedUser = await AuthService()
         .signInWithEmailAndPassword(email.value ?? '', password.value ?? '');
-    if (loggedUser != null) {
-      CustomSnackbar().simple('Logged in as ${email.value}');
-      Go.offAll(const HomePage());
-    }
+    goToHomePage();
+  }
+
+  void goToHomePage({String? savedEmail}) async {
+    loggedUserDetails =
+        await UserFirestoreService.getUser(email.value ?? savedEmail ?? '');
+    CustomSnackbar().simple('Logged in as ${loggedUserDetails?.name}');
+    Go.offAll(const HomePage());
   }
 
   void closeApp() {

@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           CustomInput(
-            hintText: '',
+            hintText: 'sample@gmail.com',
             prefixIcon: Icon(
               CupertinoIcons.profile_circled,
               color: AppColors.darkGrayColor.withOpacity(0.2),
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           CustomInput(
-            hintText: '',
+            hintText: '*********',
             obscureText: true,
             prefixIcon: Icon(
               CupertinoIcons.lock_circle,

@@ -1,4 +1,4 @@
-import 'package:Acorn/services/firestore/firestore_service.dart';
+import 'package:Acorn/services/firestore/user_firestore_service.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
