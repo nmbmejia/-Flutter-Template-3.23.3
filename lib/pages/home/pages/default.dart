@@ -71,36 +71,46 @@ class _HomepageDefaultState extends State<HomepageDefault> {
     );
   }
 
-  Widget gamesAndChallengesModule(
-      {required String image, required String name}) {
-    return Container(
-        margin: const EdgeInsets.only(right: 10),
-        alignment: Alignment.centerLeft,
-        height: 250,
-        width: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          image: DecorationImage(
-            image: AssetImage(image),
-            fit: BoxFit.cover,
+  Widget gamesAndChallengesModule(dynamic module) {
+    return GestureDetector(
+      onTap: () {
+        Go.to(GameIntroduction(module: module));
+      },
+      child: Container(
+          margin: const EdgeInsets.only(right: 10),
+          alignment: Alignment.centerLeft,
+          height: 250,
+          width: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
           ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                decoration: const BoxDecoration(
-                  color: Colors.black87,
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: CachedNetworkImage(
+                  imageUrl: module['image'],
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                child: Center(child: Custom.subheader1(name)),
               ),
-            )
-          ],
-        ));
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: Colors.black87,
+                  ),
+                  child: Center(child: Custom.subheader1(module['title'])),
+                ),
+              )
+            ],
+          )),
+    );
   }
 
   Widget leaderboardWidget(
@@ -212,19 +222,49 @@ class _HomepageDefaultState extends State<HomepageDefault> {
           ],
         ),
         VertSpace.fifteen(),
+
         SizedBox(
           height: 250,
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return gamesAndChallengesModule(
-                  image: 'assets/images/gc_fiber.png',
-                  name: 'Fiber Quest ${index + 1}');
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('games').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Loader();
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return const Center(child: Text('No games available.'));
+              }
+
+              final games = snapshot.data!.docs;
+
+              return ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: games.length,
+                itemBuilder: (context, index) {
+                  final game = games[index];
+                  return gamesAndChallengesModule(game);
+                },
+              );
             },
           ),
         ),
+        // SizedBox(
+        //   height: 250,
+        //   child: ListView.builder(
+        //     shrinkWrap: true,
+        //     scrollDirection: Axis.horizontal,
+        //     itemCount: 10,
+        //     itemBuilder: (context, index) {
+        //       return gamesAndChallengesModule(
+        //           image: 'assets/images/gc_fiber.png',
+        //           name: 'Fiber Quest ${index + 1}');
+        //     },
+        //   ),
+        // ),
 
         VertSpace.fifteen(),
 
