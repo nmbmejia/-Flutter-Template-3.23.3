@@ -1,7 +1,11 @@
 import 'package:Acorn/pages/games/introduction.dart';
+import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/go.dart';
 import 'package:Acorn/services/spacings.dart';
+import 'package:Acorn/widgets/custom_loader.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,32 +17,35 @@ class HomepageDefault extends StatefulWidget {
 }
 
 class _HomepageDefaultState extends State<HomepageDefault> {
-  Widget learningModule({required String image, required String name}) {
+  Widget learningModule(dynamic module) {
     double height = 80;
     return GestureDetector(
       onTap: () {
-        Go.to(const GameIntroduction());
+        Go.to(GameIntroduction(module: module));
       },
       child: Stack(
+        clipBehavior: Clip.antiAlias,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
             margin: const EdgeInsets.only(bottom: 7),
-            alignment: Alignment.centerLeft,
             height: height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: AssetImage(image),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: CachedNetworkImage(
+                imageUrl: module['image'],
                 fit: BoxFit.cover,
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
             margin: const EdgeInsets.only(bottom: 7),
-            alignment: Alignment.centerLeft,
             height: height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
@@ -52,10 +59,12 @@ class _HomepageDefaultState extends State<HomepageDefault> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
             alignment: Alignment.centerLeft,
             height: height,
             width: MediaQuery.of(context).size.width,
-            child: Custom.header3(name, color: Colors.white, isBold: false),
+            child: Custom.header3(module['title'],
+                color: Colors.white, isBold: false),
           ),
         ],
       ),
@@ -94,23 +103,29 @@ class _HomepageDefaultState extends State<HomepageDefault> {
         ));
   }
 
-  Widget leaderboardWidget() {
+  Widget leaderboardWidget(
+      {String user = 'User', int pts = 1, String game = 'Game 1'}) {
     return ListTile(
       leading: const Icon(
         CupertinoIcons.profile_circled,
         color: Colors.black87,
-        size: 42,
+        size: 50,
       ),
       title: Custom.subheader1(
-        'Neil',
+        game,
         color: Colors.black87,
+        isBold: true,
+      ),
+      subtitle: Custom.body1(
+        user,
+        color: Colors.black.withOpacity(0.5),
       ),
       trailing: Text(
-        '1,218pts',
-        style: TextStyle(
+        '${pts}pts',
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: Colors.grey[700], // Adjust as per the design
+          color: AppColors.greenColor, // Adjust as per the design
         ),
       ),
       onTap: () {
@@ -139,13 +154,46 @@ class _HomepageDefaultState extends State<HomepageDefault> {
           ],
         ),
         VertSpace.fifteen(),
-        learningModule(
-            image: 'assets/images/lm_fabric.png', name: 'Fabrics & Fiber'),
-        learningModule(
-            image: 'assets/images/lm_handstitch.png',
-            name: 'Basic Hand Stitches'),
-        learningModule(
-            image: 'assets/images/lm_sewing.png', name: 'Sewing Tools'),
+        StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('learning_modules')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.only(bottom: 7),
+                  alignment: Alignment.centerLeft,
+                  height: 80,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.grey[300], // Skeleton loader background color
+                  ),
+                  child: const Loader());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(
+                  child: Text('No learning modules available.'));
+            }
+
+            final modules = snapshot.data!.docs;
+            modules.sort((a, b) => a['title'].compareTo(b['title']));
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: modules.length,
+              itemBuilder: (context, index) {
+                final module = modules[index];
+                return learningModule(module);
+              },
+            );
+          },
+        ),
+
         VertSpace.fifteen(),
 
         //? Games & Challenges
@@ -197,14 +245,65 @@ class _HomepageDefaultState extends State<HomepageDefault> {
         ),
         VertSpace.fifteen(),
 
-        ListView.builder(
-          itemCount: 10,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return leaderboardWidget();
+        StreamBuilder<QuerySnapshot>(
+          stream:
+              FirebaseFirestore.instance.collection('games_scores').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Loader();
+            }
+            if (snapshot.hasError) {
+              return Custom.body1('Error: ${snapshot.error}',
+                  color: Colors.black87);
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Custom.body1('Empty leaderboard...',
+                  color: Colors.black87);
+            }
+
+            // Create a map to hold the highest scores per game
+            Map<String, Map<String, dynamic>> highestScores = {};
+
+            for (var doc in snapshot.data!.docs) {
+              final game = doc['game'];
+              final score = doc['score'];
+              final user = doc['user'];
+
+              // Update the highest score for the game if necessary
+              if (!highestScores.containsKey(game) ||
+                  score > highestScores[game]!['score']) {
+                highestScores[game] = {'score': score, 'user': user};
+              }
+            }
+
+            List<Map<String, dynamic>> scoreboard = [];
+            for (var entry in highestScores.entries) {
+              scoreboard.add({
+                'game': entry.key,
+                'score': entry.value['score'],
+                'user': entry.value['user']
+              });
+            }
+
+            // Prepare the list of highest scores for display
+            // List<Widget> scoreWidgets = highestScores.entries.map((entry) {
+            //   return Custom.body1(
+            //       '${entry.key}: ${entry.value['score']}pts by ${entry.value['user']}',
+            //       color: Colors.black87);
+            // }).toList();
+
+            return Column(
+              children: scoreboard
+                  .map((score) => leaderboardWidget(
+                      user: score['user'],
+                      pts: score['score'],
+                      game: score['game']))
+                  .toList(),
+            );
           },
         ),
+
+        // ),
         VertSpace.fifteen(),
       ],
     );

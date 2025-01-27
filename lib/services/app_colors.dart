@@ -11,6 +11,6 @@ class AppColors {
   static Color tertiaryColor = const Color(0xFFFFB0B0);
 
   static const Color weeklyColor = Color(0xFFC7BC59);
-  static const Color monthlyColor = Color(0xFF1BBB3E);
+  static const Color greenColor = Color(0xFF1BBB3E);
   static const Color yearlyColor = Color(0xFFE43F49);
 }

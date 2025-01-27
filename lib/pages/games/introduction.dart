@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GameIntroduction extends StatefulWidget {
-  const GameIntroduction({super.key});
+  const GameIntroduction({super.key, required this.module});
+  final dynamic module;
 
   @override
   State<GameIntroduction> createState() => GameIntroductionState();
@@ -51,14 +52,12 @@ class GameIntroductionState extends State<GameIntroduction> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 VertSpace.ten(),
-                Custom.header1('Fiber Quest', color: Colors.black87),
+                Custom.header1(widget.module['title'], color: Colors.black87),
                 VertSpace.fifteen(),
                 Custom.subheader1('Objective', color: Colors.black87),
                 VertSpace.eight(),
-                Custom.body1(
-                    'Identify each type of Fiber based on its characteristics. Drag each word and drop it in the correct category. Submit once done.',
-                    color: Colors.black54,
-                    textAlign: TextAlign.center),
+                Custom.body1(widget.module['objective'],
+                    color: Colors.black54, textAlign: TextAlign.center),
                 VertSpace.thirty(),
                 Custom.body1('Best personal score: 10pts',
                     color: Colors.black87),
