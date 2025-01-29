@@ -27,7 +27,7 @@ class CalendarController extends GetxController {
   void goToNextMonth() {
     // Moves to the next page if it's not the last month of the year
     pageController.value.nextPage(
-      duration: Duration(milliseconds: Constants.pageAnimations),
+      duration: Duration(milliseconds: Constants.appAnimations),
       curve: Curves.easeInOut,
     );
     currentDate.value = Jiffy.parseFromDateTime(currentDate.value)
@@ -40,7 +40,7 @@ class CalendarController extends GetxController {
     // Moves to the previous page if the current page index is greater than 0
     if (pageController.value.page! > 0) {
       pageController.value.previousPage(
-        duration: Duration(milliseconds: Constants.pageAnimations),
+        duration: Duration(milliseconds: Constants.appAnimations),
         curve: Curves.easeInOut,
       );
     }

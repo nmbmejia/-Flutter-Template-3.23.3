@@ -121,24 +121,36 @@
         {
             "name" : "Canva",
             "icon" : "app-canva.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "Canva Pro",
-                    "price" : 299.00
+                    "name": "Free",
+                    "price": 0.00
+                },
+                {
+                    "name": "Pro",
+                    "price": 299.00
+                },
+                {
+                    "name": "Teams",
+                    "price": 299.00
+                },
+                {
+                    "name": "Enterprise",
+                    "price": 0.00
                 }
             ]
         },
         {
-            "name" : "Disney Plus",
+            "name" : "Disney+",
             "icon" : "app-disney.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "Basic",
-                    "price" : 249.00
+                    "name": "Basic Plan",
+                    "price": 249.00
                 },
                 {
-                    "name" : "Premium",
-                    "price" : 519.00
+                    "name": "Premium Plan",
+                    "price": 519.00
                 }
             ]
         },
@@ -169,70 +181,78 @@
         {
             "name" : "Google Drive",
             "icon" : "app-google_drive.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "100GB",
-                    "price" : 89.00
+                    "name": "Basic 100 GB",
+                    "price": 89.00
                 },
                 {
-                    "name" : "200GB",
-                    "price" : 149.00
+                    "name": "Standard 200 GB",
+                    "price": 149.00
                 },
                 {
-                    "name" : "2TB",
-                    "price" : 479.00
+                    "name": "Premium 2 TB",
+                    "price": 479.00
                 },
                 {
-                    "name" : "10TB",
-                    "price" : 4799.00
+                    "name": "Premium 10 TB",
+                    "price": 4799.00
                 },
                 {
-                    "name" : "20TB",
-                    "price" : 9599.00
+                    "name": "Premium 20 TB",
+                    "price": 9599.00
                 },
                 {
-                    "name" : "30TB",
-                    "price" : 14399.00
+                    "name": "Premium 30 TB",
+                    "price": 14399.00
                 }
             ]
         },
         {
             "name" : "Google One",
             "icon" : "app-google.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "100GB",
-                    "price" : 89.00
+                    "name": "Basic 100 GB",
+                    "price": 89.00
                 },
                 {
-                    "name" : "200GB",
-                    "price" : 149.00
+                    "name": "Standard 200 GB",
+                    "price": 149.00
                 },
                 {
-                    "name" : "2TB",
-                    "price" : 479.00
+                    "name": "Premium 2 TB",
+                    "price": 479.00
                 },
                 {
-                    "name" : "10TB",
-                    "price" : 4799.00
+                    "name": "Premium 10 TB",
+                    "price": 4799.00
                 },
                 {
-                    "name" : "20TB",
-                    "price" : 9599.00
+                    "name": "Premium 20 TB",
+                    "price": 9599.00
                 },
                 {
-                    "name" : "30TB",
-                    "price" : 14399.00
+                    "name": "Premium 30 TB",
+                    "price": 14399.00
                 }
             ]
         },
         {
             "name" : "Grab",
             "icon" : "app-grab.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "GrabUnlimited",
-                    "price" : 88.00
+                    "name": "Monthly Plan",
+                    "price": 88.00
+                },
+                {
+                    "name": "Semi-Annual Plan",
+                    "price": 408.00
+                },
+                {
+                    "name": "Annual Plan",
+                    "price": 576.00
                 }
             ]
         },
@@ -269,54 +289,66 @@
         {
             "name" : "Netflix",
             "icon" : "app-netflix.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "Mobile Plan",
-                    "price" : 149.00
+                    "name": "Mobile",
+                    "price": 149.00
                 },
                 {
-                    "name" : "Basic Plan",
-                    "price" : 249.00
+                    "name": "Basic",
+                    "price": 249.00
                 },
                 {
-                    "name" : "Standard Plan",
-                    "price" : 399.00
+                    "name": "Standard",
+                    "price": 399.00
                 },
                 {
-                    "name" : "Premium Plan",
-                    "price" : 549.00
+                    "name": "Premium",
+                    "price": 549.00
                 }
             ]
         },
         {
-            "name" : "Microsoft Office 365",
+            "name" : "Microsoft 365",
             "icon" : "app-office365.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "Personal",
-                    "price" : 349.00
+                    "name": "Microsoft 365 Personal",
+                    "price": 3499.00
                 },
                 {
-                    "name" : "Family",
-                    "price" : 469.00
+                    "name": "Microsoft 365 Family",
+                    "price": 4699.00
+                },
+                {
+                    "name": "Microsoft 365 Business Basic",
+                    "price": 1800.00
+                },
+                {
+                    "name": "Microsoft 365 Business Standard",
+                    "price": 5400.00
+                },
+                {
+                    "name": "Microsoft 365 Business Premium",
+                    "price": 10500.00
                 }
             ]
         },
         {
             "name" : "PlayStation Plus",
             "icon" : "app-playstation.png",
-            "plans" : [
+            "plans": [
                 {
-                    "name" : "PlayStation Plus Essential",
-                    "price" : 499.00
+                    "name": "Essential",
+                    "price": 159.00
                 },
                 {
-                    "name" : "PlayStation Plus Extra",
-                    "price" : 649.00
+                    "name": "Extra",
+                    "price": 269.00
                 },
                 {
-                    "name" : "PlayStation Plus Premium",
-                    "price" : 799.00
+                    "name": "Deluxe",
+                    "price": 309.00
                 }
             ]
         },
@@ -377,6 +409,285 @@
                     "price" : 379.00
                 }
             ]
+        },
+        {
+            "name" : "1Password",
+            "icon" : "app-1password.png",
+            "plans" : [
+                {
+                    "name" : "Individual",
+                    "price" : 169.00
+                },
+                {
+                    "name" : "Families",
+                    "price" : 282.00
+                },
+                {
+                    "name" : "Teams",
+                    "price" : 1127.00
+                },
+                {
+                    "name" : "Business",
+                    "price" : 451.00
+                }
+            ]
+        },
+        {
+            "name": "Amazon AWS",
+            "icon": "app-aws.png",
+            "plans": [
+                {
+                    "name": "Developer Support",
+                    "price": 1638.00
+                },
+                {
+                    "name": "Business Support",
+                    "price": 5650.00
+                },
+                {
+                    "name": "Enterprise On-Ramp Support",
+                    "price": 309750.00
+                },
+                {
+                    "name": "Enterprise Support",
+                    "price": 847500.00
+                }
+            ]
+        },
+        {
+            "name": "Apple Care+",
+            "icon": "app-applecare.png",
+            "plans": null
+        },
+        {
+            "name": "Apple Developer",
+            "icon": "app-appledeveloper.png",
+            "plans": [
+                {
+                    "name": "Individual",
+                    "price": 4490.00
+                },
+                {
+                    "name": "Organization",
+                    "price": 5585.00
+                },
+                {
+                    "name": "Enterprise",
+                    "price": 16895.00
+                }
+            ]
+        },
+        {
+            "name": "Figma",
+            "icon": "app-figma.png",
+            "plans": [
+                {
+                    "name": "Professional",
+                    "price": 847.50
+                },
+                {
+                    "name": "Organization",
+                    "price": 2542.50
+                },
+                {
+                    "name": "Enterprise",
+                    "price": 4237.50
+                }
+            ]
+        },
+        {
+            "name": "Fantastical",
+            "icon": "app-fantastical.png",
+            "plans": [
+                {
+                    "name": "Individual",
+                    "price": 268.00
+                },
+                {
+                    "name": "Family",
+                    "price": 423.00
+                }
+            ]
+        },
+        {
+            "name": "GoDaddy",
+            "icon": "app-godaddy.png",
+            "plans": [
+                {
+                    "name": "Web Hosting Economy",
+                    "price": 564.00
+                },
+                {
+                    "name": "Web Hosting Deluxe",
+                    "price": 805.00
+                },
+                {
+                    "name": "Web Hosting Ultimate",
+                    "price": 1046.00
+                },
+                {
+                    "name": "Web Hosting Maximum",
+                    "price": 1446.00
+                }
+            ]
+        },
+        {
+            "name": "GoPro",
+            "icon": "app-gopro.png",
+            "plans": [
+                {
+                    "name": "Premium",
+                    "price": 2490.00
+                },
+                {
+                    "name": "Premium+",
+                    "price": 5990.00
+                },
+                {
+                    "name": "Quik",
+                    "price": 565.00
+                }
+            ]
+        },
+        {
+            "name": "Google Cloud",
+            "icon": "app-googlecloud.png",
+            "plans": [
+                {
+                    "name": "Free Tier",
+                    "price": 0.00
+                },
+                {
+                    "name": "Pay-As-You-Go",
+                    "price": 0.00
+                },
+                {
+                    "name": "Committed Use Contracts",
+                    "price": 0.00
+                }
+            ]
+        },
+        {
+            "name": "Heroku",
+            "icon": "app-heroku.png",
+            "plans": [
+                {
+                    "name": "Eco Dynos",
+                    "price": 282.50
+                },
+                {
+                    "name": "Basic Dynos",
+                    "price": 395.50
+                },
+                {
+                    "name": "Standard-1X Dynos",
+                    "price": 1412.50
+                },
+                {
+                    "name": "Standard-2X Dynos",
+                    "price": 2825.00
+                },
+                {
+                    "name": "Performance-M Dynos",
+                    "price": 19577.50
+                },
+                {
+                    "name": "Performance-L Dynos",
+                    "price": 39155.00
+                }
+            ]
+        },
+        {
+            "name": "Kindle Unlimited",
+            "icon": "app-kindleu.png",
+            "plans": [
+                {
+                    "name": "Monthly Subscription",
+                    "price": 678.00
+                },
+                {
+                    "name": "6-Month Subscription",
+                    "price": 4068.00
+                },
+                {
+                    "name": "12-Month Subscription",
+                    "price": 8136.00
+                },
+                {
+                    "name": "24-Month Subscription",
+                    "price": 16272.00
+                }
+            ]
+        },
+        {
+            "name": "LinkedIn",
+            "icon": "app-linkedin.png",
+            "plans": [
+                {
+                    "name": "Premium Career",
+                    "price": 1695.00
+                },
+                {
+                    "name": "Premium Business",
+                    "price": 3390.00
+                },
+                {
+                    "name": "Sales Navigator Core",
+                    "price": 5650.00
+                },
+                {
+                    "name": "Sales Navigator Advanced",
+                    "price": 8475.00
+                },
+                {
+                    "name": "Recruiter Lite",
+                    "price": 9605.00
+                },
+                {
+                    "name": "Recruiter",
+                    "price": 47175.00
+                }
+            ]
+        },
+        {
+            "name": "ChatGPT",
+            "icon": "app-chat_gpt.png",
+            "plans": [
+                {
+                    "name": "Plus",
+                    "price": 999.00
+                },
+                {
+                    "name": "Team",
+                    "price": 1412.50
+                },
+                {
+                    "name": "Enterprise",
+                    "price": 0.00
+                }
+            ]
+        },
+        {
+            "name": "GitHub Copilot",
+            "icon": "app-githubcopilot.png",
+            "plans": [
+                {
+                    "name": "Individual",
+                    "price": 565.00
+                },
+                {
+                    "name": "Business",
+                    "price": 1073.50
+                },
+                {
+                    "name": "Enterprise",
+                    "price": 2203.50
+                }
+            ]
         }
+        
+
+         
+        
     ]
 }

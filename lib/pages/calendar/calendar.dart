@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:Acorn/models/personal_data_model.dart';
-import 'package:Acorn/pages/add/controllers/add_controller.dart';
+import 'package:Acorn/pages/addedit/controllers/add_controller.dart';
+import 'package:Acorn/pages/addedit/controllers/edit_controller.dart';
 import 'package:Acorn/pages/calendar/components/clickable_legends.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
-import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/currency.dart';
+import 'package:Acorn/services/custom_text.dart';
+import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/spacings.dart';
-import 'package:Acorn/widgets/custom_dialog.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
+import 'package:Acorn/widgets/dialogs/list_of_services.dart';
 import 'package:Acorn/widgets/icon_presenter.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +35,11 @@ class _CustomCalendarState extends State<CustomCalendar>
   late ShakeDetector detector;
   final CalendarController calendarController = Get.put(CalendarController());
   final AddController addController = Get.put(AddController());
+  final EditController editController = Get.put(EditController());
   final InitialController initialController = Get.find<InitialController>();
 
   //? FOR ANIMATIONS
+  Timer? holdTimer;
   late Animation<double> animation;
   late AnimationController animationController;
   double scale = 1;
@@ -102,28 +108,33 @@ class _CustomCalendarState extends State<CustomCalendar>
             buildHeader(),
             VertSpace.thirty(),
             AspectRatio(
-              aspectRatio: MediaQuery.of(context).size.width /
-                  (MediaQuery.of(context).size.height / 2),
-              child: PageView.builder(
-                pageSnapping: true,
+                aspectRatio: MediaQuery.of(context).size.width /
+                    (MediaQuery.of(context).size.height / 2),
+                child: PageView.builder(
+                  pageSnapping: true,
+                  controller: calendarController.pageController.value,
+                  onPageChanged: (index) {
+                    // Calculate the current date based on the page index
+                    calendarController.currentDate.value = DateTime(
+                      DateTime.now().year +
+                          (index ~/ 12), // Increment year correctly
+                      (index % 12) + 1, // Get the correct month
+                      1,
+                    );
+                  },
+                  itemCount: 12 * 2, // Show 2 years (24 months)
+                  itemBuilder: (context, pageIndex) {
+                    // Calculate the correct month and year for each page
+                    DateTime month = DateTime(
+                      DateTime.now().year +
+                          (pageIndex ~/ 12), // Calculate the correct year
+                      (pageIndex % 12) + 1, // Calculate the correct month
+                      1,
+                    );
 
-                controller: calendarController.pageController.value,
-                onPageChanged: (index) {
-                  // +- a year
-                  calendarController.currentDate.value = DateTime(
-                      calendarController.currentDate.value.year, index + 1, 1);
-                },
-                itemCount: 12 * 1, // Show 1 years, adjust this count as needed
-                itemBuilder: (context, pageIndex) {
-                  DateTime month = DateTime(
-                      calendarController.currentDate.value.year,
-                      (pageIndex % 12) + 1,
-                      1);
-
-                  return buildCalendar(month);
-                },
-              ),
-            ),
+                    return buildCalendar(month);
+                  },
+                )),
             const Visibility(visible: false, child: ClickableLegends())
           ],
         ),
@@ -238,15 +249,12 @@ class _CustomCalendarState extends State<CustomCalendar>
               bool isSelected =
                   text == calendarController.currentDate.value.day.toString();
 
-              List<SubscribedService>? allData =
+              List<SubscribedService>? subscriptionList =
                   initialController.personalData.value.subscribedServices;
-              List<SubscribedService>? servicesSubscribedThisDay = allData
-                  ?.where(
-                    (e) => DateUtils.isSameDay(e.date, date),
-                  )
-                  .toList();
+              List<SubscribedService>? servicesSubscribedThisDay =
+                  CustomFunctions.getSubscriptionsByDay(
+                      subscriptionList ?? [], date.day);
 
-              debugPrint('Day $text: ${servicesSubscribedThisDay?.length}');
               return GestureDetector(
                   onTapDown: (v) {
                     calendarController.currentDate.value = DateTime(
@@ -266,6 +274,7 @@ class _CustomCalendarState extends State<CustomCalendar>
                         'Clicked $text day, value of current date is ${calendarController.currentDate.value}');
                   },
                   child: box(
+                      boxDate: calendarController.currentDate.value,
                       servicesSubscribedThisDay: servicesSubscribedThisDay,
                       isSelected: isSelected,
                       deviceAspect: deviceAspect,
@@ -278,7 +287,8 @@ class _CustomCalendarState extends State<CustomCalendar>
   }
 
   Widget box(
-      {List<SubscribedService>? servicesSubscribedThisDay,
+      {required DateTime boxDate,
+      List<SubscribedService>? servicesSubscribedThisDay,
       bool isSelected = false,
       double deviceAspect = 16,
       String text = ''}) {
@@ -296,17 +306,24 @@ class _CustomCalendarState extends State<CustomCalendar>
     return Transform.scale(
       scale: isSelected ? scale : 1,
       child: GestureDetector(
-        onLongPressDown: (v) {
+        // onLongPressDown: (v) {},
+        // onLongPressEnd: (v) {
+        //   exitAnimation();
+        // },
+        // onLongPressCancel: () {
+        //   exitAnimation();
+        // },
+        onPanCancel: () {
+          holdTimer?.cancel();
+          exitAnimation();
+        },
+        onPanDown: (_) {
           holdAnimation();
-        },
-        onLongPressStart: (details) {
-          CustomDialog.simple(title: '', body: '');
-        },
-        onLongPressEnd: (v) {
-          exitAnimation();
-        },
-        onLongPressCancel: () {
-          exitAnimation();
+          holdTimer = Timer(const Duration(milliseconds: 320), () {
+            CustomDialog.showServices(boxDate, servicesSubscribedThisDay,
+                total: CustomFunctions.getTotalAmountForSubscriptions(
+                    servicesSubscribedThisDay));
+          });
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
@@ -321,50 +338,53 @@ class _CustomCalendarState extends State<CustomCalendar>
             children: [
               Align(
                   alignment: Alignment.center,
-                  child: hasData
-                      //? IF MORE THAN ONE
-                      ? servicesCount > 1
-                          ? Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Center(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(right: 12),
-                                    child: IconPresenter(
-                                      icon: servicesSubscribedThisDay
-                                          .first.subscription?.icon,
-                                      size: deviceAspect * 24,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: hasData
+                        //? IF MORE THAN ONE
+                        ? servicesCount > 1
+                            ? Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 12),
+                                      child: IconPresenter(
+                                        icon: servicesSubscribedThisDay
+                                            .first.subscription?.icon,
+                                        size: deviceAspect * 24,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Center(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 12),
-                                    height: deviceAspect * 26,
-                                    width: deviceAspect * 26,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            width: 2,
-                                            color: AppColors.darkGrayColor),
-                                        color: AppColors.whiteTertiaryColor),
-                                    child: Center(
-                                      child: Custom.body2(
-                                          '+${servicesCount - 1}',
-                                          color: AppColors.whiteColor,
-                                          isBold: true),
+                                  Center(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 12),
+                                      height: deviceAspect * 26,
+                                      width: deviceAspect * 26,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              width: 2,
+                                              color: AppColors.darkGrayColor),
+                                          color: AppColors.whiteTertiaryColor),
+                                      child: Center(
+                                        child: Custom.body2(
+                                            '+${servicesCount - 1}',
+                                            color: AppColors.whiteColor,
+                                            isBold: true),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            )
-                          //? IF JUST ONE
-                          : IconPresenter(
-                              icon: servicesSubscribedThisDay
-                                  .first.subscription?.icon,
-                              size: deviceAspect * 22,
-                            )
-                      : const SizedBox()),
+                                ],
+                              )
+                            //? IF JUST ONE
+                            : IconPresenter(
+                                icon: servicesSubscribedThisDay
+                                    .first.subscription?.icon,
+                                size: deviceAspect * 22,
+                              )
+                        : const SizedBox(),
+                  )),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Visibility(
@@ -374,6 +394,19 @@ class _CustomCalendarState extends State<CustomCalendar>
                       color: AppColors.whiteColor.withOpacity(0.5),
                       isBold: true),
                 ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Visibility(
+                    visible: !CustomFunctions.hasMadeAnyPayment(
+                            servicesSubscribedThisDay ?? [], boxDate) &&
+                        (servicesSubscribedThisDay ?? []).isNotEmpty,
+                    child: Container(
+                      width: 7,
+                      height: 7,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.red),
+                    )),
               ),
             ],
           ),

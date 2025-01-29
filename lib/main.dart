@@ -1,24 +1,57 @@
+import 'package:Acorn/pages/initial/initial.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
-import 'package:Acorn/pages/initial/initial.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //  fvm flutter pub global run rename setAppName --value "projectname"  --rename package
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Lock orientation to portrait only
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
+  static const String name = 'Acorn';
+  static const Color mainColor = Colors.deepPurple;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // // Only after at least the action method is set, the notification events are delivered
+    // AwesomeNotifications().setListeners(
+    //     onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+    //     onNotificationCreatedMethod:
+    //         NotificationController.onNotificationCreatedMethod,
+    //     onNotificationDisplayedMethod:
+    //         NotificationController.onNotificationDisplayedMethod,
+    //     onDismissActionReceivedMethod:
+    //         NotificationController.onDismissActionReceivedMethod);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StyledToast(
       locale: const Locale('fil', ''),
       child: GetMaterialApp(
+        navigatorKey: MyApp.navigatorKey,
         scrollBehavior: const MaterialScrollBehavior().copyWith(
           dragDevices: {
             PointerDeviceKind.mouse,

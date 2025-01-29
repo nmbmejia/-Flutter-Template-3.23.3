@@ -16,6 +16,10 @@ class VertSpace {
   static Widget eight() {
     return const SizedBox(height: 8);
   }
+
+  static Widget five() {
+    return const SizedBox(height: 5);
+  }
 }
 
 class HorizSpace {

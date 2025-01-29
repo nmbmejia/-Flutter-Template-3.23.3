@@ -3,9 +3,7 @@
 //     final personalDataModel = personalDataModelFromJson(jsonString);
 
 import 'dart:convert';
-
 import 'package:Acorn/models/app_data_model.dart';
-import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 
 PersonalDataModel personalDataModelFromJson(String str) =>
     PersonalDataModel.fromJson(json.decode(str));
@@ -39,60 +37,81 @@ class PersonalDataModel {
       };
 }
 
+enum RemindMe {
+  noRemind,
+  onTheDay,
+  oneDay,
+  twoDay,
+  threeDay,
+}
+
 class SubscribedService {
+  final String? id;
   final Service? subscription;
   final DateTime? date;
-  final DateTime? updatedDate;
-  final String? name;
-  final String? plan;
-  final String? period;
-  final double price;
-  final bool isFixedPricing;
-  final String? paymentMethod;
-  final String? remindMe;
+  String? name;
+  double price;
+  bool isFixedPricing;
+  List<Payment> payments;
+  RemindMe remindMe;
 
   SubscribedService({
+    this.id,
     this.subscription,
     this.date,
-    this.updatedDate,
     this.name,
-    this.plan,
-    this.period,
     this.price = 0,
     this.isFixedPricing = false,
-    this.paymentMethod,
-    this.remindMe,
+    this.payments = const [],
+    this.remindMe = RemindMe.onTheDay,
   });
 
   factory SubscribedService.fromJson(Map<String, dynamic> json) =>
       SubscribedService(
+        id: json["id"],
         subscription: json["subscription"] == null
             ? null
             : Service.fromJson(json["subscription"]),
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
-        updatedDate: json["updated_date"] == null
-            ? null
-            : DateTime.parse(json["updated_date"]),
         name: json["name"],
-        plan: json["plan"],
-        period: json["period"],
         price: json["price"] ?? 0,
         isFixedPricing: json["is_fixed_pricing"] ?? false,
-        paymentMethod: json["payment_method"],
+        payments: json["payments"] == null
+            ? const []
+            : List<Payment>.from(
+                json["payments"]!.map((x) => Payment.fromJson(x))),
         remindMe: json["remind_me"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "subscription": subscription,
         "date": date?.toIso8601String(),
-        "updated_date": updatedDate?.toIso8601String(),
         "name": name,
-        "plan": plan,
-        "period": period,
         "price": price,
         "is_fixed_pricing": isFixedPricing,
-        "payment_method": paymentMethod,
+        "payments": List<dynamic>.from(payments.map((x) => x.toJson())),
         "remind_me": remindMe,
+      };
+}
+
+class Payment {
+  DateTime? date;
+  double? price;
+
+  Payment({
+    this.date,
+    this.price,
+  });
+
+  factory Payment.fromJson(Map<String, dynamic> json) => Payment(
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        price: json["price"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "date": date?.toIso8601String(),
+        "price": price,
       };
 }
 

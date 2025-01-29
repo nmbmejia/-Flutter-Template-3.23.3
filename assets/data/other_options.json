@@ -3,64 +3,77 @@
         {
             "name" : "Bills",
             "icon" : "other-bills.png",
-            "plans" : [
-                {
-                    "name" : "Electricity",
-                    "price" : null
-                },
-                {
-                    "name" : "Educational",
-                    "price" : null
-                },
-                {
-                    "name" : "Internet",
-                    "price" : null
-                },
-                {
-                    "name" : "Water",
-                    "price" : null
-                },
-                {
-                    "name" : "Mobile Postpaid",
-                    "price" : null
-                },
-                {
-                    "name" : "Cable/TV",
-                    "price" : null
-                },
-                {
-                    "name" : "Homeowners",
-                    "price" : null
-                },
-                {
-                    "name" : "Condo",
-                    "price" : null
-                },
-                {
-                    "name" : "Health Insurance",
-                    "price" : null
-                },
-                {
-                    "name" : "Philhealth",
-                    "price" : null
-                },
-                {
-                    "name" : "SSS",
-                    "price" : null
-                },
-                {
-                    "name" : "Pag-ibig/HDMF",
-                    "price" : null
-                },
-                {
-                    "name" : "Pag-ibig/HDMF",
-                    "price" : null
-                },
-                {
-                    "name" : "Loan Repayment",
-                    "price" : null
-                }
-            ]
+            "plans" : null
+        },
+        {
+            "name" : "Electricity",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Educational",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Internet",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Water",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Mobile Postpaid",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Cable/TV",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Homeowners",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Condo/Apartment",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Health Insurancee",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Philhealth",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "SSS",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Pag-ibig/HDMF",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Loan Repayment",
+            "icon" : "other-bills.png",
+            "plans" : null
+        },
+        {
+            "name" : "Credit Card",
+            "icon" : "other-credit.png",
+            "plans" : null
         },
         {
             "name" : "Gas/Fuel",

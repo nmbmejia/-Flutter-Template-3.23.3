@@ -1,15 +1,13 @@
 import 'package:Acorn/models/app_data_model.dart';
-import 'package:Acorn/pages/add/controllers/add_controller.dart';
+import 'package:Acorn/pages/addedit/controllers/add_controller.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
-import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/spacings.dart';
-import 'package:Acorn/services/strings.dart';
 import 'package:Acorn/widgets/custom_input.dart';
-import 'package:Acorn/widgets/icon_presenter.dart';
-import 'package:Acorn/widgets/informational.dart';
+import 'package:Acorn/widgets/custom_input_dropdown.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -62,7 +60,7 @@ class _AddState extends State<Add> {
                               isBold: true),
                           GestureDetector(
                             onTap: () {
-                              Get.back();
+                              Navigator.of(context).pop();
                             },
                             child: Container(
                               width: 50,
@@ -87,14 +85,11 @@ class _AddState extends State<Add> {
 
                       //? Search services
                       Obx(
-                        () => CustomInput(
-                          text: addController.selectedServiceName.value ?? '',
+                        () => CustomInputDropdown(
+                          text: addController.selectedServiceName.value,
                           hintText: 'Search',
-                          isSearchable: true,
                           searchableData:
                               initialController.appData.value.services,
-                          prefixIcon: IconPresenter(
-                              icon: addController.selectedService.value?.icon),
                           onTextChanged: (data) {
                             addController.selectedService.value =
                                 data as Service;
@@ -108,85 +103,30 @@ class _AddState extends State<Add> {
                           },
                         ),
                       ),
-
-                      //? Search plans
-                      Obx(() {
-                        return Visibility(
-                          visible:
-                              addController.selectedServiceName.value != null &&
-                                  addController.selectedServiceHasPlans,
-                          child: CustomInput(
-                            text: addController.selectedPlanName.value ?? '',
-                            hintText: 'Select Plan',
-                            isSearchable: true,
-                            searchableData:
-                                addController.selectedService.value?.plans,
-                            prefixIcon: const IconPresenter(icon: null),
-                            onTextChanged: (data) {
-                              addController.selectedPlanName.value =
-                                  (data as Plan).name;
-                              addController.selectedPlanName.refresh();
-                              addController.selectedPrice.value =
-                                  (data).price ?? 0.0;
-                              addController.selectedPrice.refresh();
-                            },
-                          ),
-                        );
-                      }),
-
-                      //? Search periods
-                      Obx(
-                        () => Visibility(
-                          visible: addController.selectedServiceHasPlans
-                              ? addController.selectedPlanName.value != null
-                                  ? true
-                                  : false
-                              : addController.selectedServiceName.value != null,
-                          child: CustomInput(
-                            text: addController.selectedPeriodName.value ?? '',
-                            isSearchable: true,
-                            searchableData:
-                                initialController.appData.value.periods,
-                            prefixIcon: const IconPresenter(icon: null),
-                            hintText: 'Frequency',
-                            onTextChanged: (data) {
-                              addController.selectedPeriodName.value =
-                                  (data as Period).name;
-                              addController.selectedPeriodName.refresh();
-                            },
-                          ),
-                        ),
-                      ),
-
-                      //? Input price
+                      VertSpace.five(),
                       Obx(
                         () => Visibility(
                           visible:
-                              addController.selectedPeriodName.value != null,
+                              (addController.selectedServiceName.value ?? '')
+                                  .isNotEmpty,
                           child: CustomInput(
-                            text: addController.selectedPrice.value
-                                .toStringAsFixed(2),
-                            hintText: addController.selectedPrice.value
-                                .toStringAsFixed(2),
-                            prefixIcon: Custom.header3(Constants.currency,
-                                color: AppColors.whiteColor.withOpacity(0.5)),
-                            isTextField: true,
+                            text: addController.selectedPrice.value.toString(),
+                            hintText: 'Price',
+                            enabled: !addController.isFixedPricing.value,
                             onTextChanged: (data) {
                               addController.selectedPrice.value =
-                                  double.tryParse(data) ?? 0.0;
+                                  double.tryParse(data as String) ?? 0.0;
                               addController.selectedPrice.refresh();
                             },
                           ),
                         ),
                       ),
 
-                      // CHECKBOX if price is fixed
                       Obx(
                         () => Visibility(
                           visible:
-                              addController.selectedPeriodName.value != null &&
-                                  addController.selectedPeriodName.value !=
-                                      Strings.oneTime,
+                              (addController.selectedServiceName.value ?? '')
+                                  .isNotEmpty,
                           child: Row(
                             children: [
                               Checkbox(
@@ -203,7 +143,7 @@ class _AddState extends State<Add> {
                               HorizSpace.eight(),
                               Expanded(
                                 child: Custom.body1(
-                                  "Price is fixed ${(addController.selectedPeriodName.value ?? '').toLowerCase()}",
+                                  "Price is fixed on a monthly basis.",
                                 ),
                               ),
                             ],
@@ -211,25 +151,6 @@ class _AddState extends State<Add> {
                         ),
                       ),
 
-                      // Card or cash
-                      // Obx(
-                      //   () => Visibility(
-                      //     visible: addController.selectedPrice.value != 0 &&
-                      //         addController.selectedPrice.value != 0.0 &&
-                      //         addController.selectedPeriod.value?.name != null,
-                      //     child: CustomInput(
-                      //       prefixIcon: Icon(Icons.credit_card_outlined,
-                      //           color: AppColors.whiteColor.withOpacity(0.5)),
-                      //       text: addController.selectedPaymentMethod.value,
-                      //       hintText: 'Card or Cash',
-                      //       isTextField: true,
-                      //       onTextChanged: (data) {
-                      //         addController.selectedPaymentMethod.value = data;
-                      //         addController.selectedPaymentMethod.refresh();
-                      //       },
-                      //     ),
-                      //   ),
-                      // ),
                       VertSpace.thirty(),
                       Align(
                         alignment: Alignment.center,
@@ -238,16 +159,16 @@ class _AddState extends State<Add> {
                             addController.addNew();
                           },
                           child: Container(
-                            width: 70,
-                            height: 70,
+                            width: 60,
+                            height: 60,
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.lightGrayColor,
                             ),
                             child: const Center(
                               child: Icon(
-                                Icons.add_outlined,
-                                size: 40,
+                                CupertinoIcons.add,
+                                size: 30,
                                 color: AppColors.whiteColor,
                               ),
                             ),

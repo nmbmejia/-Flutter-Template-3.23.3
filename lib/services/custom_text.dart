@@ -28,9 +28,24 @@ class Custom {
       {Color color = colorDefault, bool isBold = false}) {
     return Text(
       txt,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
       style: TextStyle(
           color: color,
           fontSize: 24,
+          fontWeight: isBold ? FontWeight.w700 : FontWeight.w500),
+    );
+  }
+
+  static Text header4(String txt,
+      {Color color = colorDefault, bool isBold = false}) {
+    return Text(
+      txt,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: TextStyle(
+          color: color,
+          fontSize: 20,
           fontWeight: isBold ? FontWeight.w700 : FontWeight.w500),
     );
   }
@@ -39,6 +54,8 @@ class Custom {
       {Color color = colorDefault, bool isBold = false}) {
     return Text(
       txt,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
       style: TextStyle(
           color: color,
           fontSize: 18,
@@ -46,10 +63,24 @@ class Custom {
     );
   }
 
-  static Text body1(String txt,
+  static Text subheader2(String txt,
       {Color color = colorDefault, bool isBold = false}) {
     return Text(
       txt,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: TextStyle(
+          color: color,
+          fontSize: 16,
+          fontWeight: isBold ? FontWeight.w700 : FontWeight.w500),
+    );
+  }
+
+  static Text body1(String txt,
+      {Color color = colorDefault, bool isBold = false, TextAlign? textAlign}) {
+    return Text(
+      txt,
+      textAlign: textAlign,
       style: TextStyle(
           color: color,
           fontSize: 14,
@@ -58,9 +89,10 @@ class Custom {
   }
 
   static Text body2(String txt,
-      {Color color = colorDefault, bool isBold = false}) {
+      {Color color = colorDefault, bool isBold = false, TextAlign? textAlign}) {
     return Text(
       txt,
+      textAlign: textAlign,
       style: TextStyle(
           color: color,
           fontSize: 12,

@@ -38,6 +38,10 @@ dependencies:
   expandable_page_view: ^1.0.17
   crazy_button: ^1.0.3
   shake_detector: ^0.1.2
+  animated_size_and_fade: ^5.0.0
+  flutter_local_notifications: ^18.0.1
+  animations: ^2.0.11
+  expandable_section: ^0.0.3
 
 dev_dependencies:
   flutter_test:

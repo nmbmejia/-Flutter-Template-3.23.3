@@ -1,5 +1,3 @@
-import 'package:Acorn/pages/add/controllers/add_controller.dart';
-import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/custom_text.dart';

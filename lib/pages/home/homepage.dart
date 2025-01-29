@@ -1,11 +1,15 @@
-import 'package:Acorn/pages/add/add.dart';
+import 'package:Acorn/pages/addedit/add.dart';
 import 'package:Acorn/pages/calendar/calendar.dart';
+import 'package:Acorn/pages/home/container.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
+import 'package:Acorn/pages/home/shared_axis.dart';
 import 'package:Acorn/services/app_colors.dart';
+import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/go.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/services/strings.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,33 +49,45 @@ class _HomePageState extends State<HomePage> {
                         Custom.header1(Strings.myCalendar,
                             color: AppColors.whiteColor, isBold: true),
                         HorizSpace.eight(),
-                        const Icon(
-                          Icons.arrow_drop_down,
-                          color: AppColors.whiteSecondaryColor,
-                          size: 32,
+                        GestureDetector(
+                          onTap: () {
+                            Go.to(SharedAxisTransitionDemo());
+                          },
+                          child: const Icon(
+                            Icons.arrow_drop_down,
+                            color: AppColors.whiteSecondaryColor,
+                            size: 32,
+                          ),
                         )
                       ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Go.to(const Add());
+                    OpenContainer(
+                      transitionType: ContainerTransitionType.fade,
+                      transitionDuration:
+                          Duration(milliseconds: Constants.appAnimations),
+                      openBuilder: (BuildContext context, VoidCallback _) {
+                        return const Add();
                       },
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.lightGrayColor,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.add,
-                            size: 30,
-                            color: AppColors.whiteColor,
+                      closedColor: AppColors.primaryColor,
+                      closedBuilder:
+                          (BuildContext context, VoidCallback openContainer) {
+                        return Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.lightGrayColor,
                           ),
-                        ),
-                      ),
-                    )
+                          child: const Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
 

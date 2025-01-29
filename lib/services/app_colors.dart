@@ -9,8 +9,13 @@ class AppColors {
   static const Color whiteTertiaryColor = Color(0xFF5F5F5F);
   static const Color secondaryColor = Color(0xFFFF6C22);
   static Color tertiaryColor = const Color(0xFFFFB0B0);
+  static const Color greenColor = Color.fromARGB(255, 23, 159, 52);
+  static const Color pendingColor = Color(0xFF1BBB3E);
+
+  static const Color dialogColor = lightGrayColor;
 
   static const Color weeklyColor = Color(0xFFC7BC59);
-  static const Color monthlyColor = Color(0xFF1BBB3E);
   static const Color yearlyColor = Color(0xFFE43F49);
+
+  static const Color redColor = Colors.red;
 }

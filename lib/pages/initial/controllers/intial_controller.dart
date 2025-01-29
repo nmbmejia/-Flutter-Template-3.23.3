@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:Acorn/models/app_data_model.dart';
 import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
+import 'package:Acorn/pages/initial/notification_gate.dart';
 import 'package:Acorn/services/shared_storage.dart';
 import 'package:Acorn/services/strings.dart';
 import 'package:flutter/material.dart';
@@ -29,13 +30,13 @@ class InitialController extends GetxController {
   final Rx<PersonalDataModel> personalData =
       Rx<PersonalDataModel>(PersonalDataModel());
   final Rx<AppDataModel> appData =
-      Rx<AppDataModel>(AppDataModel(services: [], periods: []));
+      Rx<AppDataModel>(AppDataModel(services: [], reminderDurations: []));
 
   @override
   void onInit() {
     checkPermissions();
     getUserData();
-    fetchPeriods();
+    fetchReminderDurations();
     fetchSubscriptionOptions();
 
     super.onInit();
@@ -66,15 +67,16 @@ class InitialController extends GetxController {
         .sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
   }
 
-  void fetchPeriods() async {
-    Map<String, dynamic> periods = {
-      "periods": [
-        {"name": Strings.oneTime},
-        {"name": Strings.everyMonth},
-        {"name": Strings.everyYear},
+  void fetchReminderDurations() async {
+    Map<String, dynamic> reminderDurations = {
+      "reminder_durations": [
+        {"name": Strings.remindMeOnTheDay},
+        {"name": Strings.remindMe1D},
+        {"name": Strings.remindMe2D},
+        {"name": Strings.remindMe3D},
       ]
     };
-    appData.value.periods = periods['periods']
+    appData.value.reminderDurations = reminderDurations['reminder_durations']
         .map<Period>((period) => Period.fromJson(period))
         .toList();
   }
@@ -91,47 +93,9 @@ class InitialController extends GetxController {
 
   void checkPermissions() async {}
 
-  void checkUserDetailsIfExists() async {
-    // firstName.value = await SharedStorage.getFirstName() ?? '';
-    // lastName.value = await SharedStorage.getLastName() ?? '';
-    // contactNumber.value = await SharedStorage.getPhoneNumber() ?? '';
-    // if (firstName.value.isNotEmpty &&
-    //     lastName.value.isNotEmpty &&
-    //     contactNumber.value.isNotEmpty) {
-    //   Get.to(const PermissionManagerPage());
-    // } else {
-    //   Get.to(const QuestionnairePage());
-    // }
-  }
-
-  Future<void> saveUserDetails() async {
-    // String _firstName = firstNameTextController.text;
-    // String _lastName = lastNameTextController.text;
-    // String _contactNumber = contactTextController.text;
-    // if (_firstName.isNotEmpty &&
-    //     _lastName.isNotEmpty &&
-    //     _contactNumber.isNotEmpty) {
-    //   if (_contactNumber.length == 11 &&
-    //       (_contactNumber.split('')[0] == '0' &&
-    //           _contactNumber.split('')[1] == '9')) {
-    //     firstName.value = _firstName;
-    //     lastName.value = _lastName;
-    //     contactNumber.value = _contactNumber;
-    //     await SharedStorage.saveFirstName(_firstName);
-    //     await SharedStorage.saveLastName(_lastName);
-    //     await SharedStorage.savePhoneNumber(_contactNumber);
-    //     Get.to(const PermissionManagerPage());
-    //   } else {
-    //     CustomSnackbar().simple('Contact number is invalid.');
-    //   }
-    // } else {
-    //   CustomSnackbar().simple('Please fill out all fields.');
-    // }
-  }
-
   void redirect(int seconds) {
     Future.delayed(Duration(seconds: seconds), () {
-      Get.offAll(const HomePage());
+      Get.offAll(const NotificationPermissionPage());
     });
   }
 

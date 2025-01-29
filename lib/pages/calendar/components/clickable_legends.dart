@@ -37,7 +37,7 @@ class _ClickableLegendsState extends State<ClickableLegends> {
               height: 6,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.monthlyColor,
+                color: AppColors.greenColor,
               ),
             ),
             HorizSpace.eight(),
