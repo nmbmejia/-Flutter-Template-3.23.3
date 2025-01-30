@@ -2,7 +2,7 @@ import 'package:Acorn/services/constants.dart';
 import 'package:get/get.dart';
 
 class Go {
-  static Transition defaultTransition = Transition.downToUp;
+  static Transition defaultTransition = Transition.cupertino;
 
   /// Similar to **Navigation.push()**
   static Future<T?> to<T>(dynamic page,
@@ -18,6 +18,17 @@ class Go {
   static Future<dynamic> off(dynamic page,
       {dynamic arguments, Transition? transition}) async {
     Get.off(
+      page,
+      arguments: arguments,
+      transition: transition ?? defaultTransition,
+      duration: Duration(milliseconds: Constants.appAnimations),
+    );
+  }
+
+  /// Similar to **Navigation.pushReplacement**
+  static Future<dynamic> offAll(dynamic page,
+      {dynamic arguments, Transition? transition}) async {
+    Get.offAll(
       page,
       arguments: arguments,
       transition: transition ?? defaultTransition,

@@ -1,6 +1,5 @@
 import 'package:Acorn/pages/addedit/add.dart';
 import 'package:Acorn/pages/calendar/calendar.dart';
-import 'package:Acorn/pages/home/container.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/home/shared_axis.dart';
 import 'package:Acorn/services/app_colors.dart';
@@ -90,50 +89,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Obx(
-                //       () => Row(
-                //         crossAxisAlignment: CrossAxisAlignment.end,
-                //         children: [
-                //           GestureDetector(
-                //             onTap: () {
-                //               homepageController.selectedHeader.value = 0;
-                //             },
-                //             child: Custom.header1(Strings.monthly,
-                //                 color:
-                //                     homepageController.selectedHeader.value == 0
-                //                         ? AppColors.whiteColor
-                //                         : AppColors.lightGrayColor,
-                //                 isBold:
-                //                     homepageController.selectedHeader.value == 0
-                //                         ? true
-                //                         : false),
-                //           ),
-                //           const SizedBox(
-                //             width: 20,
-                //           ),
-                //           GestureDetector(
-                //             onTap: () {
-                //               homepageController.selectedHeader.value = 1;
-                //             },
-                //             child: Custom.header2(Strings.oneTime,
-                //                 color:
-                //                     homepageController.selectedHeader.value == 1
-                //                         ? AppColors.whiteColor
-                //                         : AppColors.lightGrayColor,
-                //                 isBold:
-                //                     homepageController.selectedHeader.value == 1
-                //                         ? true
-                //                         : false),
-                //           )
-                //         ],
-                //       ),
-                //     ),
-
                 VertSpace.fifteen(),
                 const Divider(
                   color: AppColors.lightGrayColor,

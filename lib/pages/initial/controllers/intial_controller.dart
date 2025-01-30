@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:Acorn/models/app_data_model.dart';
 import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
-import 'package:Acorn/pages/initial/notification_gate.dart';
+import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/services/shared_storage.dart';
 import 'package:Acorn/services/strings.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +95,8 @@ class InitialController extends GetxController {
 
   void redirect(int seconds) {
     Future.delayed(Duration(seconds: seconds), () {
-      Get.offAll(const NotificationPermissionPage());
+      // Get.offAll(const NotificationPermissionPage());
+      Get.offAll(const LoginPage());
     });
   }
 

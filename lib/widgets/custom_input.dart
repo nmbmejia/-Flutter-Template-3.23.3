@@ -8,12 +8,16 @@ class CustomInput extends StatefulWidget {
       {super.key,
       this.text = '',
       this.hintText = '',
+      this.obscureText = false,
       this.onTextChanged,
-      this.enabled = true});
+      this.enabled = true,
+      this.icon});
 
   final String text;
   final String hintText;
   final bool enabled;
+  final bool obscureText;
+  final Widget? icon;
   //* Returns <T> if searchable, returns String if textfield
   final Function(dynamic data)? onTextChanged;
 
@@ -24,10 +28,20 @@ class CustomInput extends StatefulWidget {
 class _CustomInputState extends State<CustomInput> {
   late TextEditingController textEditingController;
   FocusNode focusNode = FocusNode();
+  Widget? icon;
 
   @override
   void initState() {
     runWidgetConfigurations();
+    icon = widget.icon ??
+        TextButton(
+            onPressed: null,
+            child: Text(Constants.currency,
+                style: Custom.header4(
+                  '',
+                  isBold: true,
+                  color: AppColors.greenColor,
+                ).style));
 
     super.initState();
   }
@@ -65,18 +79,12 @@ class _CustomInputState extends State<CustomInput> {
         cursorRadius: const Radius.elliptical(30, 30),
         style: Custom.header4('', isBold: true).style,
         textAlignVertical: TextAlignVertical.center,
+        obscureText: widget.obscureText,
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: Custom.header4('', isBold: true).style,
 
-          prefixIcon: TextButton(
-              onPressed: () {},
-              child: Text(Constants.currency,
-                  style: Custom.header4(
-                    '',
-                    isBold: true,
-                    color: AppColors.greenColor,
-                  ).style)),
+          prefixIcon: icon,
           // prefixIcon: Padding(
           //   padding: const EdgeInsets.only(left: 15.0, right: 10),
           //   child: Custom.header4(Constants.currency,

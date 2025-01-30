@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "726534879269",
+    "project_id": "acorn-eefc8",
+    "storage_bucket": "acorn-eefc8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726534879269:android:90d6e5040512ee61da27cc",
+        "android_client_info": {
+          "package_name": "com.projectname.projectname"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw0rjN3MrZt6WrpTNnlP_fbTh-WIufatM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

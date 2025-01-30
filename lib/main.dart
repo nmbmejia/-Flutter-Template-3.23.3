@@ -1,4 +1,6 @@
+import 'package:Acorn/firebase_options.dart';
 import 'package:Acorn/pages/initial/initial.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,13 +9,16 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //  fvm flutter pub global run rename setAppName --value "projectname"  --rename package
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Lock orientation to portrait only
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }

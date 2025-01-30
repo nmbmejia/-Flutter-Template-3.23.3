@@ -36,12 +36,12 @@
             "plans" : null
         },
         {
-            "name" : "Homeowners",
+            "name" : "Homeowners Dues",
             "icon" : "other-bills.png",
             "plans" : null
         },
         {
-            "name" : "Condo/Apartment",
+            "name" : "Condo/Apartment Dues",
             "icon" : "other-bills.png",
             "plans" : null
         },

@@ -12,7 +12,7 @@ import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
-import 'package:Acorn/widgets/dialogs/list_of_services.dart';
+import 'package:Acorn/widgets/dialogs/custom.dart';
 import 'package:Acorn/widgets/icon_presenter.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
