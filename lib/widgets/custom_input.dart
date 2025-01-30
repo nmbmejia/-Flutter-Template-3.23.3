@@ -11,11 +11,13 @@ class CustomInput extends StatefulWidget {
       this.obscureText = false,
       this.onTextChanged,
       this.enabled = true,
+      this.focus = false,
       this.icon});
 
   final String text;
   final String hintText;
   final bool enabled;
+  final bool focus;
   final bool obscureText;
   final Widget? icon;
   //* Returns <T> if searchable, returns String if textfield
@@ -48,7 +50,9 @@ class _CustomInputState extends State<CustomInput> {
 
   void runWidgetConfigurations() {
     textEditingController = TextEditingController();
-    focusNode.requestFocus();
+    if (widget.focus) {
+      focusNode.requestFocus();
+    }
     textEditingController.selection = TextSelection(
         baseOffset: 0, extentOffset: textEditingController.value.text.length);
   }

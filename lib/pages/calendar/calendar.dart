@@ -43,7 +43,7 @@ class _CustomCalendarState extends State<CustomCalendar>
   late Animation<double> animation;
   late AnimationController animationController;
   double scale = 1;
-  double maxScale = 1.3;
+  double maxScale = 1.1;
   final duration = const Duration(milliseconds: 2000);
   final reverse = const Duration(milliseconds: 900);
 

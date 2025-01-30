@@ -5,13 +5,14 @@ import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/firestore/user_firestore_service.dart';
 import 'package:Acorn/services/go.dart';
+import 'package:Acorn/services/loader.dart';
 import 'package:Acorn/widgets/animated_fade_in.dart';
 import 'package:Acorn/widgets/custom_input.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
-import 'package:Acorn/widgets/dialogs/custom.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,6 +22,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LoginController>(
@@ -54,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: CustomInput(
+                          focus: true,
                           hintText: 'Email',
                           onTextChanged: (data) {
                             String text = data as String;
@@ -201,21 +206,28 @@ class _LoginPageState extends State<LoginPage> {
                                       : controller.login(context)
                                   : null;
                             },
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.lightGrayColor,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.navigate_next_outlined,
-                                  size: 30,
-                                  color: AppColors.whiteColor,
-                                ),
-                              ),
-                            ),
+                            child: controller.isLoading.value
+                                ? const AnimatedFadeInItem(
+                                    index: 2,
+                                    delayInMs: 250,
+                                    child: LoaderWidget())
+                                : AnimatedFadeInItem(
+                                    index: 2,
+                                    delayInMs: 250,
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.lightGrayColor,
+                                      ),
+                                      child: const Icon(
+                                        Icons.navigate_next_outlined,
+                                        size: 30,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
@@ -236,6 +248,7 @@ class LoginController extends GetxController {
   UserCredential? loggedUser;
   UserModel? loggedUserDetails;
 
+  RxBool isLoading = false.obs;
   RxBool isFormComplete = false.obs;
   RxBool isRegistering = false.obs;
   String email = '';
@@ -264,12 +277,13 @@ class LoginController extends GetxController {
       CustomSnackbar().simple('Password must be at least 8 characters');
       return;
     }
+    isLoading.value = true;
     loggedUser =
         await AuthService().signInWithEmailAndPassword(email, password);
     if (loggedUser != null) {
       goToHomePage();
     }
-
+    isLoading.value = false;
     // CustomDialog.generic(context,
     //     title: 'Account does not exist',
     //     content: 'Do you want to register instead?',
@@ -301,10 +315,13 @@ class LoginController extends GetxController {
       CustomSnackbar().simple('Passwords do not match');
       return;
     }
+    isLoading.value = true;
+
     loggedUser =
         await AuthService().registerWithEmailAndPassword(email, password);
     if (loggedUser != null) {
       goToHomePage();
     }
+    isLoading.value = false;
   }
 }

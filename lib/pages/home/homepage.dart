@@ -2,13 +2,17 @@ import 'package:Acorn/pages/addedit/add.dart';
 import 'package:Acorn/pages/calendar/calendar.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/home/shared_axis.dart';
+import 'package:Acorn/pages/initial/auth/auth.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/custom_text.dart';
+import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/go.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/services/strings.dart';
+import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                         HorizSpace.eight(),
                         GestureDetector(
                           onTap: () {
-                            Go.to(SharedAxisTransitionDemo());
+                            showProfileDropdown(context);
                           },
                           child: const Icon(
                             Icons.arrow_drop_down,
@@ -116,6 +120,66 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
+    });
+  }
+
+  void showProfileDropdown(BuildContext context) {
+    showMenu(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      menuPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      color: const Color.fromARGB(255, 239, 239, 239),
+      position: RelativeRect.fromLTRB(
+        MediaQuery.of(context).size.width -
+            120, // Adjust position based on icon location
+        kToolbarHeight + 75, // Below the AppBar
+        30,
+        0,
+      ),
+      items: [
+        PopupMenuItem(
+          value: 'profile',
+          child: Row(
+            children: [
+              const Icon(CupertinoIcons.person_crop_square_fill,
+                  color: Colors.black87),
+              const SizedBox(width: 15),
+              Text(
+                'Profile',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[700], // Adjust as per the design
+                ),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 'logout',
+          child: Row(
+            children: [
+              const Icon(CupertinoIcons.square_arrow_right,
+                  color: Colors.black87),
+              const SizedBox(width: 15),
+              Text(
+                'Logout',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[700], // Adjust as per the design
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) async {
+      if (value == 'logout') {
+        CustomSnackbar().simple('Logged out.');
+        await AuthService().signOut();
+        Get.offAll(const AuthGate());
+      }
     });
   }
 }

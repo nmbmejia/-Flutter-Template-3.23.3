@@ -7,7 +7,7 @@ class AppColors {
   static const Color whiteColor = Color(0xFFFFFFFF);
   static const Color whiteSecondaryColor = Color(0xFFD3D3D3);
   static const Color whiteTertiaryColor = Color(0xFF5F5F5F);
-  static const Color secondaryColor = Color(0xFFFF6C22);
+  static const Color secondaryColor = Color(0xFFE8A747);
   static Color tertiaryColor = const Color(0xFFFFB0B0);
   static const Color greenColor = Color.fromARGB(255, 23, 159, 52);
   static const Color pendingColor = Color(0xFF1BBB3E);

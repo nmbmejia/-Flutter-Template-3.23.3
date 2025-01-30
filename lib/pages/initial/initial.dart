@@ -32,7 +32,9 @@ class _InitialPageState extends State<InitialPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Custom.header1(Strings.appName),
-          const LoaderWidget(),
+          const LoaderWidget(
+            withMargins: true,
+          ),
         ],
       )),
     ));
