@@ -1,5 +1,6 @@
 import 'package:Acorn/firebase_options.dart';
 import 'package:Acorn/pages/initial/initial.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    FirebaseFirestore.instance.settings =
+        const Settings(persistenceEnabled: true);
+
     // // Only after at least the action method is set, the notification events are delivered
     // AwesomeNotifications().setListeners(
     //     onActionReceivedMethod: NotificationController.onActionReceivedMethod,

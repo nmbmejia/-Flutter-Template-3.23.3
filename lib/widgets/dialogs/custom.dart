@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:Acorn/models/personal_data_model.dart';
+import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/addedit/edit.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/constants.dart';
@@ -65,8 +66,7 @@ class CustomDialog {
     );
   }
 
-  static showServices(
-      DateTime boxDate, List<SubscribedService>? subscribedServices,
+  static showServices(DateTime boxDate, List<Reminder> subscribedServices,
       {double total = 0}) {
     return showGeneralDialog(
       barrierDismissible: true,
@@ -94,7 +94,7 @@ class CustomDialog {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          (subscribedServices ?? []).isEmpty
+                          (subscribedServices).isEmpty
                               ? emptyState()
                               : Expanded(
                                   child: listOfServicesForTheDay(
@@ -152,13 +152,15 @@ class CustomDialog {
   }
 
   static Widget listOfServicesForTheDay(
-      DateTime boxDate, List<SubscribedService>? subscribedServices) {
+      DateTime boxDate, List<Reminder>? subscribedServices) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       shrinkWrap: true,
       itemCount: subscribedServices?.length,
       itemBuilder: (context, index) {
-        SubscribedService? service = subscribedServices?[index];
+        Reminder? reminder = subscribedServices?[index];
+        double? paymentAmount =
+            CustomFunctions.hasPaymentBeenMade(reminder!, boxDate);
 
         // int dynamicPriceGroupIndex = DateExtensions.findIndexByMonthYear(
         //     service?.dynamicPriceGroup, boxDate.month, boxDate.year);
@@ -189,10 +191,10 @@ class CustomDialog {
           child: GestureDetector(
             onTap: () {
               Get.back();
-              Go.to(Edit(
-                  id: service.id ?? '',
-                  boxDate: boxDate,
-                  serviceSubscribed: service));
+              // Go.to(Edit(
+              //     id: service.id ?? '',
+              //     boxDate: boxDate,
+              //     serviceSubscribed: service));
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
@@ -210,46 +212,25 @@ class CustomDialog {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconPresenter(
-                          icon: service?.subscription?.icon,
+                          icon: CustomFunctions.getIconForReminder(reminder!),
                           size: 28,
                         ),
                         HorizSpace.ten(),
                         Flexible(
-                          child: Custom.subheader2(
-                              (service?.name ?? '').toString(),
+                          child: Custom.subheader2((reminder.title).toString(),
                               isBold: true),
                         ),
                         HorizSpace.ten(),
                       ],
                     ),
                   ),
-                  CustomFunctions.hasMadePayment(service!, boxDate)
+                  paymentAmount != null
                       ? Custom.body1(
-                          Constants.currency + service.price.toMonetaryFormat(),
+                          Constants.currency + paymentAmount.toMonetaryFormat(),
                           isBold: false,
                           color: AppColors.pendingColor)
                       : Custom.body1('Pending',
                           isBold: false, color: AppColors.redColor)
-                  // service.period == Strings.oneTime ||
-                  //         (service.period != Strings.oneTime &&
-                  //             service.isFixedPricing)
-                  //     ? Custom.body1(
-                  //         Constants.currency + service.price.toMonetaryFormat(),
-                  //         isBold: true,
-                  //         color: AppColors.whiteColor)
-                  //     : isPaymentPending
-                  //         ? Custom.body1('Pending',
-                  //             isBold: false, color: AppColors.pendingColor)
-                  //         : Custom.body1(
-                  //             Constants.currency +
-                  //                 (service
-                  //                             .dynamicPriceGroup?[
-                  //                                 dynamicPriceGroupIndex]
-                  //                             .price ??
-                  //                         0)
-                  //                     .toMonetaryFormat(),
-                  //             isBold: false,
-                  //             color: AppColors.pendingColor)
                 ],
               ),
             ),

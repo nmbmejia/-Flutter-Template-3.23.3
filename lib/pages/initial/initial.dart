@@ -1,3 +1,4 @@
+import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/custom_text.dart';
@@ -15,6 +16,7 @@ class InitialPage extends StatefulWidget {
 
 class _InitialPageState extends State<InitialPage> {
   final initialController = Get.put(InitialController());
+  final loginController = Get.put(LoginController());
 
   @override
   void initState() {

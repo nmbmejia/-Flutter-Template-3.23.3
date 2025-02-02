@@ -12,7 +12,6 @@ import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,223 +23,212 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  LoginController controller = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<LoginController>(
-        init: LoginController(),
-        builder: (controller) {
-          return Scaffold(
-            backgroundColor: AppColors.primaryColor,
-            body: SafeArea(
-              child: Container(
-                color: AppColors.primaryColor,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedFadeInItem(
-                        index: 1,
-                        delayInMs: 450,
-                        child: Opacity(
-                          opacity: 0.9,
-                          child: Image.asset(
-                            'assets/images/acorn.png',
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+    return Scaffold(
+      backgroundColor: AppColors.primaryColor,
+      body: SafeArea(
+        child: Container(
+          color: AppColors.primaryColor,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedFadeInItem(
+                  index: 1,
+                  delayInMs: 450,
+                  child: Opacity(
+                    opacity: 0.9,
+                    child: Image.asset(
+                      'assets/images/acorn.png',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomInput(
+                    focus: true,
+                    hintText: 'Email',
+                    onTextChanged: (data) {
+                      String text = data as String;
+                      controller.email = text;
+
+                      if (controller.isRegistering.value) {
+                        controller.isFormComplete.value =
+                            controller.email.isNotEmpty &&
+                                controller.password.isNotEmpty &&
+                                controller.confirmPassword.isNotEmpty;
+                      } else {
+                        controller.isFormComplete.value =
+                            controller.email.isNotEmpty &&
+                                controller.password.isNotEmpty;
+                      }
+                    },
+                    icon: const Icon(Icons.email_outlined),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomInput(
+                    hintText: 'Password',
+                    onTextChanged: (data) {
+                      String text = data as String;
+                      controller.password = text;
+
+                      if (controller.isRegistering.value) {
+                        controller.isFormComplete.value =
+                            controller.email.isNotEmpty &&
+                                controller.password.isNotEmpty &&
+                                controller.confirmPassword.isNotEmpty;
+                      } else {
+                        controller.isFormComplete.value =
+                            controller.email.isNotEmpty &&
+                                controller.password.isNotEmpty;
+                      }
+                    },
+                    icon: const Icon(Icons.lock_outline),
+                    obscureText: true,
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isRegistering.value,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: CustomInput(
+                            hintText: 'Confirm Password',
+                            onTextChanged: (data) {
+                              String text = data as String;
+                              controller.confirmPassword = text;
+
+                              if (controller.isRegistering.value) {
+                                controller.isFormComplete.value =
+                                    controller.email.isNotEmpty &&
+                                        controller.password.isNotEmpty &&
+                                        controller.confirmPassword.isNotEmpty;
+                              } else {
+                                controller.isFormComplete.value =
+                                    controller.email.isNotEmpty &&
+                                        controller.password.isNotEmpty;
+                              }
+                            },
+                            icon: const Icon(Icons.lock_outline),
+                            obscureText: true,
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: CustomInput(
-                          focus: true,
-                          hintText: 'Email',
-                          onTextChanged: (data) {
-                            String text = data as String;
-                            controller.email = text;
-
-                            if (controller.isRegistering.value) {
-                              controller.isFormComplete.value =
-                                  controller.email.isNotEmpty &&
-                                      controller.password.isNotEmpty &&
-                                      controller.confirmPassword.isNotEmpty;
-                            } else {
-                              controller.isFormComplete.value =
-                                  controller.email.isNotEmpty &&
-                                      controller.password.isNotEmpty;
-                            }
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => controller.isRegistering.value
+                      ? GestureDetector(
+                          onTap: () {
+                            controller.isRegistering.value = false;
                           },
-                          icon: const Icon(Icons.email_outlined),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: CustomInput(
-                          hintText: 'Password',
-                          onTextChanged: (data) {
-                            String text = data as String;
-                            controller.password = text;
-
-                            if (controller.isRegistering.value) {
-                              controller.isFormComplete.value =
-                                  controller.email.isNotEmpty &&
-                                      controller.password.isNotEmpty &&
-                                      controller.confirmPassword.isNotEmpty;
-                            } else {
-                              controller.isFormComplete.value =
-                                  controller.email.isNotEmpty &&
-                                      controller.password.isNotEmpty;
-                            }
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 0, top: 20),
+                            child: Custom.body1('Back to login',
+                                textAlign: TextAlign.justify,
+                                isBold: false,
+                                color: AppColors.whiteSecondaryColor),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            controller.isRegistering.value = true;
                           },
-                          icon: const Icon(Icons.lock_outline),
-                          obscureText: true,
-                        ),
-                      ),
-                      Obx(
-                        () => Visibility(
-                          visible: controller.isRegistering.value,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                child: CustomInput(
-                                  hintText: 'Confirm Password',
-                                  onTextChanged: (data) {
-                                    String text = data as String;
-                                    controller.confirmPassword = text;
-
-                                    if (controller.isRegistering.value) {
-                                      controller.isFormComplete.value =
-                                          controller.email.isNotEmpty &&
-                                              controller.password.isNotEmpty &&
-                                              controller
-                                                  .confirmPassword.isNotEmpty;
-                                    } else {
-                                      controller.isFormComplete.value =
-                                          controller.email.isNotEmpty &&
-                                              controller.password.isNotEmpty;
-                                    }
-                                  },
-                                  icon: const Icon(Icons.lock_outline),
-                                  obscureText: true,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 0, top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 50,
+                                  height: 1,
+                                  color: AppColors.whiteColor.withOpacity(0.2),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => controller.isRegistering.value
-                            ? GestureDetector(
-                                onTap: () {
-                                  controller.isRegistering.value = false;
-                                },
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.only(left: 0, top: 20),
-                                  child: Custom.body1('Back to login',
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Custom.body1('or Register',
                                       textAlign: TextAlign.justify,
                                       isBold: false,
                                       color: AppColors.whiteSecondaryColor),
                                 ),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  controller.isRegistering.value = true;
-                                },
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.only(left: 0, top: 20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        height: 1,
-                                        color: AppColors.whiteColor
-                                            .withOpacity(0.2),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Custom.body1('or Register',
-                                            textAlign: TextAlign.justify,
-                                            isBold: false,
-                                            color:
-                                                AppColors.whiteSecondaryColor),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        height: 1,
-                                        color: AppColors.whiteColor
-                                            .withOpacity(0.2),
-                                      ),
-                                    ],
-                                  ),
+                                Container(
+                                  width: 50,
+                                  height: 1,
+                                  color: AppColors.whiteColor.withOpacity(0.2),
                                 ),
-                              ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Obx(
-                        () => Opacity(
-                          opacity: controller.isFormComplete.value ? 1 : 0.2,
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.isFormComplete.value
-                                  ? controller.isRegistering.value
-                                      ? controller.register()
-                                      : controller.login(context)
-                                  : null;
-                            },
-                            child: controller.isLoading.value
-                                ? const AnimatedFadeInItem(
-                                    index: 2,
-                                    delayInMs: 250,
-                                    child: LoaderWidget())
-                                : AnimatedFadeInItem(
-                                    index: 2,
-                                    delayInMs: 250,
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.lightGrayColor,
-                                      ),
-                                      child: const Icon(
-                                        Icons.navigate_next_outlined,
-                                        size: 30,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                    ),
-                                  ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 100,
-                      )
-                    ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Obx(
+                  () => Opacity(
+                    opacity: controller.isFormComplete.value ? 1 : 0.2,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.isFormComplete.value
+                            ? controller.isRegistering.value
+                                ? controller.register()
+                                : controller.login(context)
+                            : null;
+                      },
+                      child: controller.isLoading.value
+                          ? const AnimatedFadeInItem(
+                              index: 2, delayInMs: 250, child: LoaderWidget())
+                          : AnimatedFadeInItem(
+                              index: 2,
+                              delayInMs: 250,
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.lightGrayColor,
+                                ),
+                                child: const Icon(
+                                  Icons.navigate_next_outlined,
+                                  size: 30,
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                            ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             ),
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 }
 

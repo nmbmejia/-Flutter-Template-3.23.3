@@ -1,4 +1,4 @@
-import 'package:Acorn/models/app_data_model.dart';
+import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/addedit/controllers/add_controller.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
@@ -29,10 +29,7 @@ class _AddState extends State<Add> {
   @override
   void initState() {
     debugPrint(initialController.appData.value.services?.length.toString());
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   CustomSnackbar()
-    //       .simple("Leave price blank if price varies on a monthly basis.");
-    // });
+
     addController.init();
     super.initState();
   }
@@ -83,6 +80,43 @@ class _AddState extends State<Add> {
                       VertSpace.fifteen(),
                       VertSpace.thirty(),
 
+                      //? Recurrence
+                      Obx(
+                        () => SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ToggleButtons(
+                            direction: Axis.horizontal,
+                            onPressed: (int index) {
+                              addController.selectedRecurrence.value =
+                                  ReminderRecurrence.values[index];
+                            },
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            selectedBorderColor: AppColors.whiteSecondaryColor,
+                            selectedColor: Colors.black87,
+                            fillColor: AppColors.whiteSecondaryColor,
+                            color: AppColors.whiteSecondaryColor,
+                            constraints: const BoxConstraints(
+                              minHeight: 30.0,
+                              minWidth: 100.0,
+                            ),
+                            isSelected: ReminderRecurrence.values
+                                .map((recurrence) =>
+                                    recurrence ==
+                                    addController.selectedRecurrence.value)
+                                .toList(),
+                            children: ReminderRecurrence.values
+                                .map((recurrence) => Text(recurrence
+                                    .toString()
+                                    .split('.')
+                                    .last
+                                    .capitalize!))
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                      VertSpace.five(),
+
                       //? Search services
                       Obx(
                         () => CustomInputDropdown(
@@ -91,12 +125,9 @@ class _AddState extends State<Add> {
                           searchableData:
                               initialController.appData.value.services,
                           onTextChanged: (data) {
-                            addController.selectedService.value =
-                                data as Service;
                             addController.selectedServiceName.value =
                                 data.name ?? '';
                             addController.selectedServiceName.refresh();
-                            addController.selectedService.refresh();
 
                             //Reset
                             addController.resetAll();
@@ -108,15 +139,17 @@ class _AddState extends State<Add> {
                         () => Visibility(
                           visible:
                               (addController.selectedServiceName.value ?? '')
-                                  .isNotEmpty,
+                                      .isNotEmpty &&
+                                  addController.selectedRecurrence.value !=
+                                      ReminderRecurrence.once,
                           child: CustomInput(
-                            text: addController.selectedPrice.value.toString(),
+                            text: addController.selectedAmount.value.toString(),
                             hintText: 'Price',
-                            enabled: !addController.isFixedPricing.value,
+                            enabled: addController.isFixedPricing.value,
                             onTextChanged: (data) {
-                              addController.selectedPrice.value =
+                              addController.selectedAmount.value =
                                   double.tryParse(data as String) ?? 0.0;
-                              addController.selectedPrice.refresh();
+                              addController.selectedAmount.refresh();
                             },
                           ),
                         ),
@@ -126,7 +159,9 @@ class _AddState extends State<Add> {
                         () => Visibility(
                           visible:
                               (addController.selectedServiceName.value ?? '')
-                                  .isNotEmpty,
+                                      .isNotEmpty &&
+                                  addController.selectedRecurrence.value !=
+                                      ReminderRecurrence.once,
                           child: Row(
                             children: [
                               Checkbox(
@@ -140,10 +175,15 @@ class _AddState extends State<Add> {
                                 checkColor: AppColors
                                     .whiteColor, // Customize the check mark color
                               ),
-                              HorizSpace.eight(),
                               Expanded(
-                                child: Custom.body1(
-                                  "Price is fixed on a monthly basis.",
+                                child: GestureDetector(
+                                  onTap: () {
+                                    addController.isFixedPricing.value =
+                                        !addController.isFixedPricing.value;
+                                  },
+                                  child: Custom.body1(
+                                    "The amount ${addController.isFixedPricing.value ? 'is fixed' : 'varies'} on ${addController.selectedRecurrence.value == ReminderRecurrence.daily ? 'a daily' : addController.selectedRecurrence.value == ReminderRecurrence.weekly ? 'a weekly' : addController.selectedRecurrence.value == ReminderRecurrence.monthly ? 'a monthly' : addController.selectedRecurrence.value == ReminderRecurrence.yearly ? 'a yearly' : 'a monthly'} basis.",
+                                  ),
                                 ),
                               ),
                             ],
@@ -151,7 +191,9 @@ class _AddState extends State<Add> {
                         ),
                       ),
 
-                      VertSpace.thirty(),
+                      VertSpace.five(),
+
+                      VertSpace.fifteen(),
                       Align(
                         alignment: Alignment.center,
                         child: GestureDetector(

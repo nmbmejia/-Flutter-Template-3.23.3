@@ -1,4 +1,7 @@
+import 'package:Acorn/models/reminder_model.dart';
+import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/services/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jiffy/jiffy.dart';
@@ -8,13 +11,14 @@ enum AppStates { initial, inRoom }
 // ignore: must_be_immutable
 class CalendarController extends GetxController {
   // ignore: non_constant_identifier_names
-  RxBool alreadyShownForThisSession_Shake = false.obs;
+  final LoginController loginController = Get.put(LoginController());
 
   final Rx<PageController> pageController =
       PageController(initialPage: DateTime.now().month - 1).obs;
 
   Rx<DateTime> currentDate = DateTime.now().obs;
   RxBool selectedcurrentyear = RxBool(false);
+  RxDouble totalMonthAmount = 0.0.obs;
 
   bool isSelectedDayToday() {
     return DateUtils.isSameDay(currentDate.value, DateTime.now());
@@ -68,5 +72,54 @@ class CalendarController extends GetxController {
       default:
         return 'NAN';
     }
+  }
+
+  Stream<List<Reminder>> getRemindersForDate(DateTime date) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(loginController.loggedUserDetails?.email)
+        .collection('reminders')
+        .snapshots()
+        .map((snapshot) {
+      List<Reminder> reminders = snapshot.docs
+          .map((doc) => Reminder.fromFirestore(doc))
+          .where((reminder) {
+        // Convert both dates to date-only for comparison (no time component)
+        DateTime targetDate = DateUtils.dateOnly(date);
+        DateTime reminderStart = DateUtils.dateOnly(reminder.startDate);
+        DateTime? reminderEnd = reminder.endDate != null
+            ? DateUtils.dateOnly(reminder.endDate!)
+            : null;
+
+        // Check if the target date is within the reminder's date range
+        if (reminderEnd != null && targetDate.isAfter(reminderEnd)) {
+          return false;
+        }
+        if (targetDate.isBefore(reminderStart)) {
+          return false;
+        }
+
+        // Handle different recurrence patterns
+        switch (reminder.recurrence) {
+          case ReminderRecurrence.once:
+            return targetDate.isAtSameMomentAs(reminderStart);
+
+          case ReminderRecurrence.daily:
+            return true;
+
+          case ReminderRecurrence.weekly:
+            return targetDate.weekday == reminderStart.weekday;
+
+          case ReminderRecurrence.monthly:
+            return targetDate.day == reminder.dueDay;
+
+          case ReminderRecurrence.yearly:
+            return targetDate.month == reminderStart.month &&
+                targetDate.day == reminderStart.day;
+        }
+      }).toList();
+
+      return reminders;
+    });
   }
 }

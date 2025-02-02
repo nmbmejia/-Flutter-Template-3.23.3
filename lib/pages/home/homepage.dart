@@ -1,17 +1,19 @@
+import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/addedit/add.dart';
 import 'package:Acorn/pages/calendar/calendar.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
-import 'package:Acorn/pages/home/shared_axis.dart';
 import 'package:Acorn/pages/initial/auth/auth.dart';
+import 'package:Acorn/pages/initial/auth/login.dart';
+import 'package:Acorn/pages/upcoming/upcoming.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/firebase/auth_service.dart';
-import 'package:Acorn/services/go.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/services/strings.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:animations/animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,87 +37,128 @@ class _HomePageState extends State<HomePage> {
     return GetBuilder<HomePageController>(builder: (homepageController) {
       return Scaffold(
         backgroundColor: AppColors.primaryColor,
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // HorizSpace.fifteen(),
-                    Row(
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(Get.find<LoginController>().loggedUserDetails?.email)
+                      .collection('reminders')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text('No data available'),
+                      );
+                    }
+                    List<Reminder> allReminders = snapshot.hasData
+                        ? snapshot.data!.docs
+                            .map((doc) => Reminder.fromFirestore(doc))
+                            .toList()
+                        : [];
+                    debugPrint('All reminders: ${allReminders.length}');
+
+                    return Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Custom.header1(Strings.myCalendar,
-                            color: AppColors.whiteColor, isBold: true),
-                        HorizSpace.eight(),
-                        GestureDetector(
-                          onTap: () {
-                            showProfileDropdown(context);
-                          },
-                          child: const Icon(
-                            Icons.arrow_drop_down,
-                            color: AppColors.whiteSecondaryColor,
-                            size: 32,
-                          ),
-                        )
-                      ],
-                    ),
-                    OpenContainer(
-                      transitionType: ContainerTransitionType.fade,
-                      transitionDuration:
-                          Duration(milliseconds: Constants.appAnimations),
-                      openBuilder: (BuildContext context, VoidCallback _) {
-                        return const Add();
-                      },
-                      closedColor: AppColors.primaryColor,
-                      closedBuilder:
-                          (BuildContext context, VoidCallback openContainer) {
-                        return Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.lightGrayColor,
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.add,
-                              size: 30,
-                              color: AppColors.whiteColor,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // HorizSpace.fifteen(),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Custom.header1(Strings.myCalendar,
+                                    color: AppColors.whiteColor, isBold: true),
+                                HorizSpace.eight(),
+                                GestureDetector(
+                                  onTap: () {
+                                    showProfileDropdown(context);
+                                  },
+                                  child: const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: AppColors.whiteSecondaryColor,
+                                    size: 32,
+                                  ),
+                                )
+                              ],
                             ),
+                            OpenContainer(
+                              transitionType: ContainerTransitionType.fade,
+                              transitionDuration: Duration(
+                                  milliseconds: Constants.appAnimations),
+                              openBuilder:
+                                  (BuildContext context, VoidCallback _) {
+                                return const Add();
+                              },
+                              closedColor: AppColors.primaryColor,
+                              closedBuilder: (BuildContext context,
+                                  VoidCallback openContainer) {
+                                return Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.lightGrayColor,
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 30,
+                                      color: AppColors.whiteColor,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        VertSpace.fifteen(),
+                        const Divider(
+                          color: AppColors.lightGrayColor,
+                        ),
+                        VertSpace.thirty(),
+                        Obx(
+                          () => CustomCalendar(
+                            allReminders: allReminders,
+                            type: homepageController.selectedHeader.value == 0
+                                ? CalendarState.monthly
+                                : CalendarState.oneTime,
                           ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                VertSpace.fifteen(),
-                const Divider(
-                  color: AppColors.lightGrayColor,
-                ),
-                VertSpace.thirty(),
-                Obx(
-                  () => CustomCalendar(
-                    type: homepageController.selectedHeader.value == 0
-                        ? CalendarState.monthly
-                        : CalendarState.oneTime,
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.9,
-                  child: Image.asset(
-                    'assets/images/acorn.png',
-                    width: 18,
-                    height: 18,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Custom.body2('v1.0.0')
-              ],
+                        ),
+                        UpcomingReminders(
+                          allReminders: allReminders,
+                        ),
+                        VertSpace.thirty(),
+                        VertSpace.thirty(),
+                        VertSpace.thirty(),
+                        Opacity(
+                          opacity: 0.9,
+                          child: Image.asset(
+                            'assets/images/acorn.png',
+                            width: 18,
+                            height: 18,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Custom.body2('v1.0.0')
+                      ],
+                    );
+                  }),
             ),
           ),
         ),

@@ -4,11 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:Acorn/models/app_data_model.dart';
-import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/pages/initial/auth/auth.dart';
-import 'package:Acorn/pages/initial/auth/login.dart';
-import 'package:Acorn/services/shared_storage.dart';
 import 'package:Acorn/services/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,15 +25,13 @@ class InitialController extends GetxController {
   RxString lastName = ''.obs;
   RxString contactNumber = ''.obs;
 
-  final Rx<PersonalDataModel> personalData =
-      Rx<PersonalDataModel>(PersonalDataModel());
   final Rx<AppDataModel> appData =
       Rx<AppDataModel>(AppDataModel(services: [], reminderDurations: []));
 
   @override
   void onInit() {
     checkPermissions();
-    getUserData();
+    // getUserData();
     fetchReminderDurations();
     fetchSubscriptionOptions();
 
@@ -82,15 +77,15 @@ class InitialController extends GetxController {
         .toList();
   }
 
-  Future<void> getUserData() async {
-    personalData.value = await SharedStorage.getPersonalData() ??
-        PersonalDataModel(user: User(), subscribedServices: []);
-  }
+  // Future<void> getUserData() async {
+  //   personalData.value = await SharedStorage.getPersonalData() ??
+  //       PersonalDataModel(user: User(), subscribedServices: []);
+  // }
 
-  double getTotal() {
-    return (personalData.value.subscribedServices ?? [])
-        .fold(0, (sum, item) => sum.toDouble() + item.price);
-  }
+  // double getTotal() {
+  //   return (personalData.value.subscribedServices ?? [])
+  //       .fold(0, (sum, item) => sum.toDouble() + item.price);
+  // }
 
   void checkPermissions() async {}
 

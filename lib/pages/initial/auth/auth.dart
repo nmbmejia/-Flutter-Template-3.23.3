@@ -1,7 +1,4 @@
-import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/pages/initial/auth/login.dart';
-import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +13,11 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
-  final loginController = Get.put(LoginController());
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -25,7 +26,8 @@ class _AuthGateState extends State<AuthGate> {
         if (!snapshot.hasData) {
           return const LoginPage();
         } else {
-          loginController.goToHomePage(savedEmail: snapshot.data?.email ?? '');
+          Get.find<LoginController>()
+              .goToHomePage(savedEmail: snapshot.data?.email ?? '');
         }
         return const SizedBox();
       },

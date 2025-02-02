@@ -75,6 +75,8 @@ class _CustomInputState extends State<CustomInput> {
               extentOffset: textEditingController.value.text.length);
           focusNode.requestFocus();
         },
+        enableSuggestions: false,
+        autocorrect: false,
         onChanged: (value) => onTextChanged(value),
         controller: textEditingController,
         focusNode: focusNode,
