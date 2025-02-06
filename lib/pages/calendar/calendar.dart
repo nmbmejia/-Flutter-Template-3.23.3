@@ -5,7 +5,6 @@ import 'package:Acorn/pages/addedit/controllers/add_controller.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_widgets.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
-import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +30,11 @@ class CustomCalendar extends StatefulWidget {
   const CustomCalendar(
       {super.key,
       this.type = CalendarState.monthly,
-      this.allReminders = const []});
+      this.allReminders = const [],
+      this.monthReminders = const []});
   final CalendarState type;
   final List<Reminder> allReminders;
+  final List<Reminder> monthReminders;
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -42,9 +43,9 @@ class CustomCalendar extends StatefulWidget {
 class _CustomCalendarState extends State<CustomCalendar>
     with SingleTickerProviderStateMixin {
   late ShakeDetector detector;
-  final CalendarController calendarController = Get.put(CalendarController());
   final AddController addController = Get.put(AddController());
   final InitialController initialController = Get.find<InitialController>();
+  final CalendarController calendarController = Get.find<CalendarController>();
 
   //? FOR ANIMATIONS
   Timer? holdTimer;
@@ -55,15 +56,8 @@ class _CustomCalendarState extends State<CustomCalendar>
   final duration = const Duration(milliseconds: 300);
   final reverse = const Duration(milliseconds: 300);
 
-  //? Reminders for this month
-  List<Reminder> monthReminders = [];
-
   @override
   void initState() {
-    monthReminders = CustomFunctions.getRemindersForMonth(
-        widget.allReminders, calendarController.currentDate.value);
-    debugPrint(
-        'Month has ${monthReminders.length} reminders. Total amount for month: ${calendarController.totalMonthAmount.value}');
     detector = ShakeDetector.autoStart(onShake: () {
       debugPrint('SHAKE SHAKE SHAKE!!!');
     });
@@ -102,7 +96,6 @@ class _CustomCalendarState extends State<CustomCalendar>
   @override
   void dispose() {
     detector.stopListening();
-    calendarController.dispose();
     animationController.dispose();
     super.dispose();
   }
@@ -113,7 +106,7 @@ class _CustomCalendarState extends State<CustomCalendar>
       () => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          buildHeader(monthReminders),
+          buildHeader(widget.monthReminders),
           VertSpace.thirty(),
           AspectRatio(
               aspectRatio: MediaQuery.of(context).size.width /
@@ -140,11 +133,12 @@ class _CustomCalendarState extends State<CustomCalendar>
                     1,
                   );
 
-                  return buildCalendar(
-                      context, month, widget.allReminders, monthReminders,
+                  return buildCalendar(context, month, widget.allReminders,
+                      widget.monthReminders,
                       animation: animation,
                       holdAnimation: holdAnimation,
-                      exitAnimation: exitAnimation);
+                      exitAnimation: exitAnimation,
+                      showPreviousMonthDays: true);
                 },
               )),
           // const Visibility(visible: false, child: ClickableLegends())

@@ -23,19 +23,23 @@ class CustomFunctions {
   static List<Reminder> getRemindersForMonth(
       List<Reminder> allReminders, DateTime month) {
     return allReminders.where((reminder) {
-      // For one-time reminders, check if it falls in this month
+      // Check if reminder falls within the month
+      DateTime monthStart = DateTime(month.year, month.month, 1);
+      DateTime monthEnd = DateTime(month.year, month.month + 1, 0);
+
+      // For one-time reminders
       if (reminder.recurrence == ReminderRecurrence.once) {
-        return reminder.startDate.year == month.year &&
-            reminder.startDate.month == month.month;
+        return reminder.startDate
+                .isAfter(monthStart.subtract(const Duration(days: 1))) &&
+            reminder.startDate.isBefore(monthEnd.add(const Duration(days: 1)));
       }
 
-      // For recurring reminders, check if this month falls within start/end dates
-      bool withinDateRange = DateTime(month.year, month.month)
-              .isAfter(reminder.startDate.subtract(const Duration(days: 1))) &&
-          (reminder.endDate == null ||
-              DateTime(month.year, month.month).isBefore(
-                  DateTime(reminder.endDate!.year, reminder.endDate!.month)
-                      .add(const Duration(days: 32))));
+      // For recurring reminders
+      bool withinDateRange =
+          reminder.startDate.isBefore(monthEnd.add(const Duration(days: 1))) &&
+              (reminder.endDate == null ||
+                  reminder.endDate!
+                      .isAfter(monthStart.subtract(const Duration(days: 1))));
 
       if (!withinDateRange) return false;
 
@@ -43,21 +47,17 @@ class CustomFunctions {
         case ReminderRecurrence.daily:
           return true;
         case ReminderRecurrence.weekly:
-          // Check if any day in this month matches the due weekday
-          final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
-          for (int day = 1; day <= daysInMonth; day++) {
-            if (DateTime(month.year, month.month, day).weekday ==
-                reminder.dueDay) {
-              return true;
-            }
+          // Check if any day in the month matches the due weekday
+          for (var day = monthStart;
+              day.isBefore(monthEnd.add(const Duration(days: 1)));
+              day = day.add(const Duration(days: 1))) {
+            if (day.weekday == reminder.dueDay) return true;
           }
           return false;
         case ReminderRecurrence.monthly:
-          // Check if due day exists in this month
-          final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
-          return reminder.dueDay <= daysInMonth;
+          return reminder.dueDay <= monthEnd.day;
         case ReminderRecurrence.yearly:
-          return month.month == reminder.startDate.month;
+          return reminder.startDate.month == month.month;
         default:
           return false;
       }

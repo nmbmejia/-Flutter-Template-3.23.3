@@ -58,6 +58,7 @@ class Payment {
 }
 
 class Reminder {
+  String id;
   final String userEmail;
   final String title;
   final double? amount;
@@ -70,6 +71,7 @@ class Reminder {
   final List<Payment> payments;
 
   Reminder({
+    this.id = '',
     required this.userEmail,
     required this.title,
     this.amount,
@@ -98,6 +100,7 @@ class Reminder {
           .toList();
     }
     return Reminder(
+      id: doc.id,
       userEmail: data['userEmail'],
       title: data['title'],
       amount: data['amount']?.toDouble(),
@@ -119,6 +122,7 @@ class Reminder {
   // Convert to Firestore format
   Map<String, dynamic> toFirestore() {
     return {
+      'id': id,
       'userEmail': userEmail,
       'title': title,
       'amount': amount,

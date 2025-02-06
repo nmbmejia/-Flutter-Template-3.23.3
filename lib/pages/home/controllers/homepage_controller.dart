@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
+import 'package:get/get.dart';
 
 enum AppStates { initial, inRoom }
 

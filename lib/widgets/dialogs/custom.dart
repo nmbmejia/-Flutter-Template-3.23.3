@@ -86,7 +86,7 @@ class CustomDialog {
                   header(total: total),
                   VertSpace.eight(),
                   Container(
-                      width: Get.width * 0.75,
+                      width: 300,
                       height: Get.height * 0.30,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),

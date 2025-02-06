@@ -3,11 +3,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReminderFirestoreService {
   Future<void> addReminder(Reminder reminder) async {
-    await FirebaseFirestore.instance
+    final docRef = FirebaseFirestore.instance
         .collection('users')
         .doc(reminder.userEmail)
         .collection('reminders')
-        .add(reminder.toFirestore());
+        .doc(); // Create doc reference with auto-generated ID
+
+    // Add the document ID to the reminder data
+    final reminderData = reminder.toFirestore();
+    reminderData['id'] = docRef.id;
+
+    await docRef.set(reminderData);
   }
 
   Stream<List<Reminder>> getUserReminders(String userEmail) {

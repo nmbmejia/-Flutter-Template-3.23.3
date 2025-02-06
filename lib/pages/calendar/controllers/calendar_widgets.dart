@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:Acorn/models/consolidated_reminder_model.dart';
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
+import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/currency.dart';
 import 'package:Acorn/services/custom_functions.dart';
@@ -122,7 +124,7 @@ Widget buildCalendar(
             return showPreviousMonthDays
                 ? Container(
                     decoration: BoxDecoration(
-                        color: AppColors.darkGrayColor.withOpacity(0.5),
+                        color: AppColors.darkGrayColor.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(10)),
                   )
                 : const SizedBox();
@@ -150,19 +152,13 @@ Widget buildCalendar(
                         calendarController.currentDate.value.month,
                         int.tryParse(text) ?? 0);
                     calendarController.currentDate.refresh();
-                    // if (!calendarController.isSelectedDayToday() &&
-                    //     !calendarController
-                    //         .alreadyShownForThisSession_Shake.value) {
-                    //   CustomSnackbar()
-                    //       .simple("Shake your device to go back to today");
-                    //   calendarController
-                    //       .alreadyShownForThisSession_Shake.value = true;
-                    // }
+
                     debugPrint(
                         'Clicked $text day, value of current date is ${calendarController.currentDate.value}');
                   },
                   child: dayBox(
-                      boxDate: calendarController.currentDate.value,
+                      // boxDate: calendarController.currentDate.value,
+                      boxDate: date,
                       servicesSubscribedThisDay: remindersForDay,
                       isSelected: isSelected,
                       deviceAspect: deviceAspect,
@@ -190,6 +186,7 @@ Widget dayBox({
   required Function() holdAnimation,
   required Function() exitAnimation,
 }) {
+  bool isBoxDateTodaysDate = DateUtils.isSameDay(boxDate, DateTime.now());
   bool hasData = servicesSubscribedThisDay == null
       ? false
       : servicesSubscribedThisDay.isEmpty
@@ -237,7 +234,10 @@ Widget dayBox({
             border: isSelected
                 ? Border.all(
                     width: 2, color: AppColors.whiteColor.withOpacity(0.8))
-                : null,
+                : isBoxDateTodaysDate
+                    ? Border.all(
+                        width: 1, color: AppColors.whiteColor.withOpacity(0.5))
+                    : null,
             color: AppColors.darkGrayColor,
             borderRadius: BorderRadius.circular(10)),
         child: Stack(
@@ -296,7 +296,10 @@ Widget dayBox({
               child: Visibility(
                 visible: true,
                 child: Custom.body3(text,
-                    color: AppColors.whiteColor.withOpacity(0.5), isBold: true),
+                    color: isBoxDateTodaysDate
+                        ? AppColors.whiteColor
+                        : AppColors.whiteColor.withOpacity(0.4),
+                    isBold: true),
               ),
             ),
             // Align(

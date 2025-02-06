@@ -1,12 +1,14 @@
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/addedit/add.dart';
 import 'package:Acorn/pages/calendar/calendar.dart';
+import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/initial/auth/auth.dart';
 import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/pages/upcoming/upcoming.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/constants.dart';
+import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/spacings.dart';
@@ -29,12 +31,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     Get.lazyPut<HomePageController>(() => HomePageController());
+    Get.lazyPut<CalendarController>(() => CalendarController());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomePageController>(builder: (homepageController) {
+      final CalendarController calendarController =
+          Get.find<CalendarController>();
       return Scaffold(
         backgroundColor: AppColors.primaryColor,
         body: SingleChildScrollView(
@@ -63,12 +68,21 @@ class _HomePageState extends State<HomePage> {
                         child: Text('No data available'),
                       );
                     }
+                    //? All reminders in the database
                     List<Reminder> allReminders = snapshot.hasData
                         ? snapshot.data!.docs
                             .map((doc) => Reminder.fromFirestore(doc))
                             .toList()
                         : [];
+
+                    //? Reminders for this month
+                    List<Reminder> monthReminders =
+                        CustomFunctions.getRemindersForMonth(
+                            allReminders, DateTime.now());
+
                     debugPrint('All reminders: ${allReminders.length}');
+                    debugPrint(
+                        'Current month has ${monthReminders.length} reminders. Total amount for month: ${calendarController.totalMonthAmount.value}');
 
                     return Column(
                       mainAxisSize: MainAxisSize.min,
@@ -77,7 +91,6 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // HorizSpace.fifteen(),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -135,6 +148,7 @@ class _HomePageState extends State<HomePage> {
                         Obx(
                           () => CustomCalendar(
                             allReminders: allReminders,
+                            monthReminders: monthReminders,
                             type: homepageController.selectedHeader.value == 0
                                 ? CalendarState.monthly
                                 : CalendarState.oneTime,
@@ -142,6 +156,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         UpcomingReminders(
                           allReminders: allReminders,
+                          monthReminders: monthReminders,
                         ),
                         VertSpace.thirty(),
                         VertSpace.thirty(),
@@ -180,24 +195,24 @@ class _HomePageState extends State<HomePage> {
         0,
       ),
       items: [
-        PopupMenuItem(
-          value: 'profile',
-          child: Row(
-            children: [
-              const Icon(CupertinoIcons.person_crop_square_fill,
-                  color: Colors.black87),
-              const SizedBox(width: 15),
-              Text(
-                'Profile',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[700], // Adjust as per the design
-                ),
-              ),
-            ],
-          ),
-        ),
+        // PopupMenuItem(
+        //   value: 'profile',
+        //   child: Row(
+        //     children: [
+        //       const Icon(CupertinoIcons.person_crop_square_fill,
+        //           color: Colors.black87),
+        //       const SizedBox(width: 15),
+        //       Text(
+        //         'Profile',
+        //         style: TextStyle(
+        //           fontSize: 16,
+        //           fontWeight: FontWeight.bold,
+        //           color: Colors.grey[700], // Adjust as per the design
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         PopupMenuItem(
           value: 'logout',
           child: Row(
