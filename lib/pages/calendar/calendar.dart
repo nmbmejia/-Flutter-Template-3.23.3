@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/addedit/controllers/add_controller.dart';
+import 'package:Acorn/pages/addedit/controllers/edit_controller.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_widgets.dart';
+import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
+import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
@@ -27,14 +30,11 @@ enum CalendarState { monthly, oneTime }
 */
 
 class CustomCalendar extends StatefulWidget {
-  const CustomCalendar(
-      {super.key,
-      this.type = CalendarState.monthly,
-      this.allReminders = const [],
-      this.monthReminders = const []});
+  const CustomCalendar({
+    super.key,
+    this.type = CalendarState.monthly,
+  });
   final CalendarState type;
-  final List<Reminder> allReminders;
-  final List<Reminder> monthReminders;
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -44,9 +44,10 @@ class _CustomCalendarState extends State<CustomCalendar>
     with SingleTickerProviderStateMixin {
   late ShakeDetector detector;
   final AddController addController = Get.put(AddController());
+  final EditController editController = Get.put(EditController());
   final InitialController initialController = Get.find<InitialController>();
   final CalendarController calendarController = Get.find<CalendarController>();
-
+  final HomePageController homePageController = Get.find<HomePageController>();
   //? FOR ANIMATIONS
   Timer? holdTimer;
   late Animation<double> animation;
@@ -106,7 +107,7 @@ class _CustomCalendarState extends State<CustomCalendar>
       () => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          buildHeader(widget.monthReminders),
+          buildHeader(homePageController.monthReminders),
           VertSpace.thirty(),
           AspectRatio(
               aspectRatio: MediaQuery.of(context).size.width /
@@ -117,7 +118,7 @@ class _CustomCalendarState extends State<CustomCalendar>
                 onPageChanged: (index) {
                   // Calculate the current date based on the page index
                   calendarController.currentDate.value = DateTime(
-                    DateTime.now().year +
+                    Constants.dateToday.year +
                         (index ~/ 12), // Increment year correctly
                     (index % 12) + 1, // Get the correct month
                     1,
@@ -127,14 +128,13 @@ class _CustomCalendarState extends State<CustomCalendar>
                 itemBuilder: (context, pageIndex) {
                   // Calculate the correct month and year for each page
                   DateTime month = DateTime(
-                    DateTime.now().year +
+                    Constants.dateToday.year +
                         (pageIndex ~/ 12), // Calculate the correct year
                     (pageIndex % 12) + 1, // Calculate the correct month
                     1,
                   );
 
-                  return buildCalendar(context, month, widget.allReminders,
-                      widget.monthReminders,
+                  return buildCalendar(context, month,
                       animation: animation,
                       holdAnimation: holdAnimation,
                       exitAnimation: exitAnimation,

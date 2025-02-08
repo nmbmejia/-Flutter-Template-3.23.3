@@ -26,6 +26,7 @@ class _AuthGateState extends State<AuthGate> {
         if (!snapshot.hasData) {
           return const LoginPage();
         } else {
+          debugPrint('AuthGate: ${snapshot.data?.email}');
           Get.find<LoginController>()
               .goToHomePage(savedEmail: snapshot.data?.email ?? '');
         }

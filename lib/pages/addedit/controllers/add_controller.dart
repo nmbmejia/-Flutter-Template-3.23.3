@@ -1,11 +1,7 @@
-import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/initial/auth/login.dart';
-import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/firestore/reminder_firestore_service.dart';
-import 'package:Acorn/services/firestore/reminder_status_firestore_service.dart';
-import 'package:Acorn/services/id_generation.dart';
 import 'package:Acorn/widgets/custom_snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -35,14 +31,20 @@ class AddController extends GetxController {
   void resetGroup() {}
 
   void addNew() {
-    debugPrint('Selected Price: ${selectedAmount.value}');
+    debugPrint('Selected Amount: ${selectedAmount.value}');
     if (selectedServiceName.value == null) {
       CustomSnackbar().simple("Please select a biller.");
       return;
     }
 
     if (isFixedPricing.value && (selectedAmount.value < 0)) {
-      CustomSnackbar().simple("Price cannot be blank if it's fixed.");
+      CustomSnackbar().simple("Amount cannot be blank if it's fixed.");
+      return;
+    }
+
+    if ((selectedAmount.value == 0 || selectedAmount.value < 0) &&
+        selectedRecurrence.value != ReminderRecurrence.once) {
+      CustomSnackbar().simple("Amount cannot be 1 or less.");
       return;
     }
 
@@ -65,6 +67,7 @@ class AddController extends GetxController {
           ? calendarController.currentDate.value
           : null,
       payments: [],
+      sharedTo: [],
     ));
 
     CustomSnackbar().simple("Added payment reminder.");

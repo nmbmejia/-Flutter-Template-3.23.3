@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 enum ReminderRecurrence {
   once,
@@ -32,19 +33,16 @@ class SharedInfo {
 class Payment {
   final double amount;
   final DateTime date;
-  final bool isPaid;
 
   Payment({
     required this.amount,
     required this.date,
-    this.isPaid = false,
   });
 
   factory Payment.fromMap(Map<String, dynamic> map) {
     return Payment(
       amount: map['amount']?.toDouble() ?? 0.0,
       date: (map['date'] as Timestamp).toDate(),
-      isPaid: map['isPaid'] ?? false,
     );
   }
 
@@ -52,7 +50,6 @@ class Payment {
     return {
       'amount': amount,
       'date': Timestamp.fromDate(date),
-      'isPaid': isPaid,
     };
   }
 }
@@ -88,17 +85,18 @@ class Reminder {
   factory Reminder.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
     List<SharedInfo> sharedToList = [];
+    List<Payment> paymentsList = [];
     if (data['sharedTo'] != null) {
       sharedToList = (data['sharedTo'] as List)
           .map((item) => SharedInfo.fromMap(item))
           .toList();
     }
-    List<Payment> paymentsList = [];
     if (data['payments'] != null) {
       paymentsList = (data['payments'] as List)
           .map((item) => Payment.fromMap(item))
           .toList();
     }
+    // Payments are now in a subcollection, not in the document data
     return Reminder(
       id: doc.id,
       userEmail: data['userEmail'],
@@ -115,7 +113,7 @@ class Reminder {
           ? (data['endDate'] as Timestamp).toDate()
           : null,
       sharedTo: sharedToList,
-      payments: paymentsList,
+      payments: paymentsList, // Empty list since payments are in subcollection
     );
   }
 

@@ -1,3 +1,5 @@
+import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
+import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
@@ -17,6 +19,8 @@ class InitialPage extends StatefulWidget {
 class _InitialPageState extends State<InitialPage> {
   final initialController = Get.put(InitialController());
   final loginController = Get.put(LoginController());
+  final homePageController = Get.put(HomePageController());
+  final calendarController = Get.put(CalendarController());
 
   @override
   void initState() {

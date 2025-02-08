@@ -1,6 +1,7 @@
 import 'package:Acorn/models/user_model.dart';
 import 'package:Acorn/pages/home/homepage.dart';
 import 'package:Acorn/services/app_colors.dart';
+import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/firestore/user_firestore_service.dart';
@@ -24,6 +25,12 @@ class _LoginPageState extends State<LoginPage> {
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
   LoginController controller = Get.find<LoginController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.isRegistering.value = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -244,8 +251,12 @@ class LoginController extends GetxController {
   String confirmPassword = '';
 
   void goToHomePage({String? savedEmail}) async {
+    await UserFirestoreService.updateUserLastLogin(
+        email: loggedUserDetails?.email ?? savedEmail ?? '',
+        lastLogin: Constants.dateToday);
     loggedUserDetails = await UserFirestoreService.getUser(
         email.isNotEmpty ? email : savedEmail ?? '');
+
     CustomSnackbar().simple('Logged in as ${loggedUserDetails?.email}');
     Go.offAll(const HomePage());
   }

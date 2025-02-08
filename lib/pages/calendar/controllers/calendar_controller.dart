@@ -14,14 +14,14 @@ class CalendarController extends GetxController {
   final LoginController loginController = Get.put(LoginController());
 
   final Rx<PageController> pageController =
-      PageController(initialPage: DateTime.now().month - 1).obs;
+      PageController(initialPage: Constants.dateToday.month - 1).obs;
 
-  Rx<DateTime> currentDate = DateTime.now().obs;
+  Rx<DateTime> currentDate = Constants.dateToday.obs;
   RxBool selectedcurrentyear = RxBool(false);
   RxDouble totalMonthAmount = 0.0.obs;
 
   bool isSelectedDayToday() {
-    return DateUtils.isSameDay(currentDate.value, DateTime.now());
+    return DateUtils.isSameDay(currentDate.value, Constants.dateToday);
   }
 
   bool isWeekdayToday(int weekday) {

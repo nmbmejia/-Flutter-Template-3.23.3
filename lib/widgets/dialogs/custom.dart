@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:Acorn/models/personal_data_model.dart';
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/addedit/edit.dart';
 import 'package:Acorn/services/app_colors.dart';
@@ -152,86 +151,74 @@ class CustomDialog {
   }
 
   static Widget listOfServicesForTheDay(
-      DateTime boxDate, List<Reminder>? subscribedServices) {
+      DateTime boxDate, List<Reminder>? reminders) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       shrinkWrap: true,
-      itemCount: subscribedServices?.length,
+      itemCount: reminders?.length,
       itemBuilder: (context, index) {
-        Reminder? reminder = subscribedServices?[index];
-        double? paymentAmount =
+        Reminder? reminder = reminders?[index];
+        bool hasPaymentBeenMade =
             CustomFunctions.hasPaymentBeenMade(reminder!, boxDate);
-
-        // int dynamicPriceGroupIndex = DateExtensions.findIndexByMonthYear(
-        //     service?.dynamicPriceGroup, boxDate.month, boxDate.year);
-        // bool isPaymentPending =
-        //     isPartOfDynamicPriceGroup && dynamicPriceGroupIndex == -1;
-
-        // bool priceIsFromMain = service?.period == Strings.oneTime ||
-        //         (service?.period != Strings.oneTime && service!.isFixedPricing)
-        //     // ? Constants.currency + service!.price.toMonetaryFormat()
-        //     ? true
-        //     : isPaymentPending
-        //         ? false
-        //         : false;
-
-        // // Could be from main price, pending, or from dynamic group price.
-        // String price = service?.period == Strings.oneTime ||
-        //         (service!.period != Strings.oneTime && service.isFixedPricing)
-        //     ? Constants.currency + service!.price.toMonetaryFormat()
-        //     : isPaymentPending
-        //         ? 'Pending'
-        //         : Constants.currency +
-        //             (service.dynamicPriceGroup?[dynamicPriceGroupIndex].price ??
-        //                     0)
-        //                 .toMonetaryFormat();
+        // Payment amount returns null if no payment has been made
+        double? paymentAmount =
+            CustomFunctions.howMuchPaymentBeenMade(reminder, boxDate);
 
         return AnimatedFadeInItem(
           index: index,
           child: GestureDetector(
             onTap: () {
               Get.back();
-              // Go.to(Edit(
-              //     id: service.id ?? '',
-              //     boxDate: boxDate,
-              //     serviceSubscribed: service));
+              Go.to(Edit(
+                id: reminder.id,
+                boxDate: boxDate,
+                reminder: reminder,
+                hasPaymentBeenMade: hasPaymentBeenMade,
+                paymentAmount: paymentAmount,
+              ));
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              margin: const EdgeInsets.only(bottom: 5),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: AppColors.darkGrayColor),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconPresenter(
-                          icon: CustomFunctions.getIconForReminder(reminder!),
-                          size: 28,
-                        ),
-                        HorizSpace.ten(),
-                        Flexible(
-                          child: Custom.subheader2((reminder.title).toString(),
-                              isBold: true),
-                        ),
-                        HorizSpace.ten(),
-                      ],
+            child: Opacity(
+              opacity: hasPaymentBeenMade ? 0.5 : 1,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                margin: const EdgeInsets.only(bottom: 5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: AppColors.darkGrayColor),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconPresenter(
+                            icon: CustomFunctions.getIconForReminder(reminder),
+                            size: 28,
+                          ),
+                          HorizSpace.ten(),
+                          Flexible(
+                            child: Custom.subheader2(
+                                (reminder.title).toString(),
+                                isBold: true),
+                          ),
+                          HorizSpace.ten(),
+                        ],
+                      ),
                     ),
-                  ),
-                  paymentAmount != null
-                      ? Custom.body1(
-                          Constants.currency + paymentAmount.toMonetaryFormat(),
-                          isBold: false,
-                          color: AppColors.pendingColor)
-                      : Custom.body1('Pending',
-                          isBold: false, color: AppColors.redColor)
-                ],
+                    hasPaymentBeenMade
+                        ? Custom.body1(
+                            Constants.currency +
+                                (paymentAmount ?? 0.0).toMonetaryFormat(),
+                            isBold: false,
+                            color: AppColors.pendingColor)
+                        : Custom.body1('Pending',
+                            isBold: false, color: AppColors.redColor)
+                  ],
+                ),
               ),
             ),
           ),

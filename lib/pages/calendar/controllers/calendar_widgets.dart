@@ -6,6 +6,7 @@ import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
+import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/currency.dart';
 import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/custom_text.dart';
@@ -61,9 +62,7 @@ Widget buildHeader(List<Reminder> monthReminders) {
 
 Widget buildCalendar(
   BuildContext context,
-  DateTime month,
-  List<Reminder> allReminders,
-  List<Reminder> remindersForMonth, {
+  DateTime month, {
   bool showPreviousMonthDays = false,
   required Animation<double> animation,
   Timer? holdTimer,
@@ -138,9 +137,10 @@ Widget buildCalendar(
 
             // --------------------------- Filter reminders for this specific day based on due day and recurrence
             //* Non-exhaustive, only shows recurring reminders, that's why you pass all the original Reminders (allReminders) and not monthReminders variable.
-
-            List<Reminder> remindersForDay =
-                CustomFunctions.getRemindersForDay(allReminders, date);
+            HomePageController homePageController =
+                Get.find<HomePageController>();
+            List<Reminder> remindersForDay = CustomFunctions.getRemindersForDay(
+                homePageController.allReminders, date);
 
             return AnimatedFadeInItem(
               index: index,
@@ -186,7 +186,7 @@ Widget dayBox({
   required Function() holdAnimation,
   required Function() exitAnimation,
 }) {
-  bool isBoxDateTodaysDate = DateUtils.isSameDay(boxDate, DateTime.now());
+  bool isBoxDateTodaysDate = DateUtils.isSameDay(boxDate, Constants.dateToday);
   bool hasData = servicesSubscribedThisDay == null
       ? false
       : servicesSubscribedThisDay.isEmpty
@@ -236,7 +236,7 @@ Widget dayBox({
                     width: 2, color: AppColors.whiteColor.withOpacity(0.8))
                 : isBoxDateTodaysDate
                     ? Border.all(
-                        width: 1, color: AppColors.whiteColor.withOpacity(0.5))
+                        width: 1, color: Colors.blueAccent.withOpacity(0.5))
                     : null,
             color: AppColors.darkGrayColor,
             borderRadius: BorderRadius.circular(10)),

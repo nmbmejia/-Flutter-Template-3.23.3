@@ -13,14 +13,23 @@ class Custom {
     );
   }
 
-  static Text header2(String txt,
-      {Color color = colorDefault, bool isBold = false}) {
+  static Text header2(
+    String txt, {
+    Color color = colorDefault,
+    bool isBold = false,
+    TextAlign? textAlign,
+    int? maxLines,
+  }) {
     return Text(
       txt,
+      maxLines: maxLines,
+      textAlign: textAlign,
       style: TextStyle(
-          color: color,
-          fontSize: 32,
-          fontWeight: isBold ? FontWeight.w700 : FontWeight.w500),
+        overflow: TextOverflow.ellipsis,
+        color: color,
+        fontSize: 32,
+        fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+      ),
     );
   }
 

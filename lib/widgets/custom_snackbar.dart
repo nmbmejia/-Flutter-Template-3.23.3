@@ -8,14 +8,19 @@ class CustomSnackbar {
     showToast(
       content,
       fullWidth: false,
-      backgroundColor: AppColors.darkGrayColor,
+      backgroundColor: AppColors.whiteColor,
+      textStyle: const TextStyle(
+        color: AppColors.primaryColor,
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+      ),
       textPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       shapeBorder:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       context: Get.context!,
       animation: StyledToastAnimation.slideFromBottomFade,
       reverseAnimation: StyledToastAnimation.fade,
-      position: StyledToastPosition.bottom,
+      position: StyledToastPosition.top,
       animDuration: const Duration(milliseconds: 1500),
       duration: const Duration(seconds: 4),
       curve: Curves.elasticOut,

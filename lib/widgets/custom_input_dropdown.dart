@@ -4,8 +4,10 @@ import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/widgets/icon_presenter.dart';
 import 'package:expandable_section/expandable_section.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomInputDropdown extends StatefulWidget {
   const CustomInputDropdown(
@@ -168,6 +170,35 @@ class _CustomInputDropdownState extends State<CustomInputDropdown> {
   }
 
   Widget list() {
+    if (searchableData.isEmpty) {
+      return Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: RichText(
+          text: TextSpan(
+            style: Custom.body2('', isBold: false).style,
+            children: [
+              TextSpan(
+                  text:
+                      "Oops! We don't have that yet.\nAs an alternative, type in 'Others' for now and request it "),
+              TextSpan(
+                text: 'here',
+                style: Custom.body2('', isBold: true)
+                    .style
+                    ?.copyWith(color: Colors.blueAccent),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    final Uri url = Uri.parse('https://www.google.com');
+                    launchUrl(url, mode: LaunchMode.externalApplication);
+                  },
+              ),
+              const TextSpan(text: '!'),
+            ],
+          ),
+        ),
+      );
+    }
+
     return ListView.builder(
       itemCount: searchableData.length,
       shrinkWrap: true,

@@ -144,7 +144,7 @@ class _AddState extends State<Add> {
                                       ReminderRecurrence.once,
                           child: CustomInput(
                             text: addController.selectedAmount.value.toString(),
-                            hintText: 'Price',
+                            hintText: '',
                             enabled: addController.isFixedPricing.value,
                             onTextChanged: (data) {
                               addController.selectedAmount.value =
@@ -182,7 +182,8 @@ class _AddState extends State<Add> {
                                         !addController.isFixedPricing.value;
                                   },
                                   child: Custom.body1(
-                                    "The amount ${addController.isFixedPricing.value ? 'is fixed' : 'varies'} on ${addController.selectedRecurrence.value == ReminderRecurrence.daily ? 'a daily' : addController.selectedRecurrence.value == ReminderRecurrence.weekly ? 'a weekly' : addController.selectedRecurrence.value == ReminderRecurrence.monthly ? 'a monthly' : addController.selectedRecurrence.value == ReminderRecurrence.yearly ? 'a yearly' : 'a monthly'} basis.",
+                                    // "The amount ${addController.isFixedPricing.value ? 'is fixed' : 'varies'} on ${addController.selectedRecurrence.value == ReminderRecurrence.daily ? 'a daily' : addController.selectedRecurrence.value == ReminderRecurrence.weekly ? 'a weekly' : addController.selectedRecurrence.value == ReminderRecurrence.monthly ? 'a monthly' : addController.selectedRecurrence.value == ReminderRecurrence.yearly ? 'a yearly' : 'a monthly'} basis.",
+                                    "The amount is fixed on a ${addController.selectedRecurrence.value == ReminderRecurrence.daily ? 'daily' : addController.selectedRecurrence.value == ReminderRecurrence.weekly ? 'weekly' : addController.selectedRecurrence.value == ReminderRecurrence.monthly ? 'monthly' : addController.selectedRecurrence.value == ReminderRecurrence.yearly ? 'yearly' : 'monthly'} basis.",
                                   ),
                                 ),
                               ),
