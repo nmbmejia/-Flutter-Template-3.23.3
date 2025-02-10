@@ -8,6 +8,7 @@ import 'package:Acorn/pages/calendar/controllers/calendar_widgets.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/constants.dart';
+import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +33,11 @@ enum CalendarState { monthly, oneTime }
 class CustomCalendar extends StatefulWidget {
   const CustomCalendar({
     super.key,
+    this.allReminders = const [],
     this.type = CalendarState.monthly,
   });
   final CalendarState type;
+  final List<Reminder> allReminders;
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -48,6 +51,9 @@ class _CustomCalendarState extends State<CustomCalendar>
   final InitialController initialController = Get.find<InitialController>();
   final CalendarController calendarController = Get.find<CalendarController>();
   final HomePageController homePageController = Get.find<HomePageController>();
+
+  RxList<Reminder> monthlyReminders = <Reminder>[].obs;
+
   //? FOR ANIMATIONS
   Timer? holdTimer;
   late Animation<double> animation;
@@ -57,8 +63,14 @@ class _CustomCalendarState extends State<CustomCalendar>
   final duration = const Duration(milliseconds: 300);
   final reverse = const Duration(milliseconds: 300);
 
+  void getMonthlyReminders() async {
+    monthlyReminders.value = await CustomFunctions.getRemindersForMonth(
+        widget.allReminders, DateTime.now());
+  }
+
   @override
   void initState() {
+    getMonthlyReminders();
     detector = ShakeDetector.autoStart(onShake: () {
       debugPrint('SHAKE SHAKE SHAKE!!!');
     });
@@ -107,7 +119,7 @@ class _CustomCalendarState extends State<CustomCalendar>
       () => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          buildHeader(homePageController.monthReminders),
+          buildHeader(monthlyReminders),
           VertSpace.thirty(),
           AspectRatio(
               aspectRatio: MediaQuery.of(context).size.width /
@@ -134,7 +146,7 @@ class _CustomCalendarState extends State<CustomCalendar>
                     1,
                   );
 
-                  return buildCalendar(context, month,
+                  return buildCalendar(context, widget.allReminders, month,
                       animation: animation,
                       holdAnimation: holdAnimation,
                       exitAnimation: exitAnimation,

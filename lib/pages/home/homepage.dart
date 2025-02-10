@@ -8,7 +8,6 @@ import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/pages/upcoming/upcoming.dart';
 import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/constants.dart';
-import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/firebase/auth_service.dart';
 import 'package:Acorn/services/spacings.dart';
@@ -30,29 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Get.find<HomePageController>().getMonthReminders();
-    });
     super.initState();
-  }
-
-  Stream<QuerySnapshot> getRemindersStream() {
-    final userEmail = Get.find<LoginController>().loggedUserDetails?.email;
-
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(userEmail)
-        .collection('reminders')
-        .snapshots()
-        .map((snapshot) {
-      // This will trigger a rebuild whenever any payments subcollection changes
-      for (var doc in snapshot.docs) {
-        doc.reference.collection('payments').snapshots().listen((event) {
-          // This listener ensures we get updates from the payments subcollection
-        });
-      }
-      return snapshot;
-    });
   }
 
   @override
@@ -65,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     return GetBuilder<HomePageController>(builder: (homepageController) {
       final CalendarController calendarController =
           Get.find<CalendarController>();
+      List<Reminder> allReminders;
       return Scaffold(
         backgroundColor: AppColors.primaryColor,
         body: SingleChildScrollView(
@@ -72,7 +50,11 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: StreamBuilder(
-                stream: getRemindersStream(),
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(Get.find<LoginController>().loggedUserDetails?.email)
+                    .collection('reminders')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -90,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   //? All reminders in the database
-                  homepageController.allReminders.value = snapshot.hasData
+                  allReminders = snapshot.hasData
                       ? snapshot.data!.docs
                           .map((doc) => Reminder.fromFirestore(doc))
                           .toList()
@@ -158,11 +140,12 @@ class _HomePageState extends State<HomePage> {
                       ),
                       VertSpace.thirty(),
                       CustomCalendar(
+                        allReminders: allReminders,
                         type: homepageController.selectedHeader.value == 0
                             ? CalendarState.monthly
                             : CalendarState.oneTime,
                       ),
-                      UpcomingReminders(),
+                      UpcomingReminders(allReminders: allReminders),
                       VertSpace.thirty(),
                       VertSpace.thirty(),
                       VertSpace.thirty(),
@@ -201,24 +184,6 @@ class _HomePageState extends State<HomePage> {
         0,
       ),
       items: [
-        // PopupMenuItem(
-        //   value: 'profile',
-        //   child: Row(
-        //     children: [
-        //       const Icon(CupertinoIcons.person_crop_square_fill,
-        //           color: Colors.black87),
-        //       const SizedBox(width: 15),
-        //       Text(
-        //         'Profile',
-        //         style: TextStyle(
-        //           fontSize: 16,
-        //           fontWeight: FontWeight.bold,
-        //           color: Colors.grey[700], // Adjust as per the design
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         PopupMenuItem(
           value: 'logout',
           child: Row(

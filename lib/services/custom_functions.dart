@@ -21,49 +21,53 @@ class CustomFunctions {
 
   // Subscription related
 
-  static List<Reminder> getRemindersForMonth(
-      List<Reminder> allReminders, DateTime month) {
+  static Future<List<Reminder>> getRemindersForMonth(
+      List<Reminder> allReminders, DateTime month) async {
     if (allReminders.isEmpty) return [];
-    return allReminders.where((reminder) {
-      // Check if reminder falls within the month
-      DateTime monthStart = DateTime(month.year, month.month, 1);
-      DateTime monthEnd = DateTime(month.year, month.month + 1, 0);
 
-      // For one-time reminders
-      if (reminder.recurrence == ReminderRecurrence.once) {
-        return reminder.startDate
-                .isAfter(monthStart.subtract(const Duration(days: 1))) &&
-            reminder.startDate.isBefore(monthEnd.add(const Duration(days: 1)));
-      }
+    return Future(() async {
+      return allReminders.where((reminder) {
+        // Check if reminder falls within the month
+        DateTime monthStart = DateTime(month.year, month.month, 1);
+        DateTime monthEnd = DateTime(month.year, month.month + 1, 0);
 
-      // For recurring reminders
-      bool withinDateRange =
-          reminder.startDate.isBefore(monthEnd.add(const Duration(days: 1))) &&
-              (reminder.endDate == null ||
-                  reminder.endDate!
-                      .isAfter(monthStart.subtract(const Duration(days: 1))));
+        // For one-time reminders
+        if (reminder.recurrence == ReminderRecurrence.once) {
+          return reminder.startDate
+                  .isAfter(monthStart.subtract(const Duration(days: 1))) &&
+              reminder.startDate
+                  .isBefore(monthEnd.add(const Duration(days: 1)));
+        }
 
-      if (!withinDateRange) return false;
+        // For recurring reminders
+        bool withinDateRange = reminder.startDate
+                .isBefore(monthEnd.add(const Duration(days: 1))) &&
+            (reminder.endDate == null ||
+                reminder.endDate!
+                    .isAfter(monthStart.subtract(const Duration(days: 1))));
 
-      switch (reminder.recurrence) {
-        case ReminderRecurrence.daily:
-          return true;
-        case ReminderRecurrence.weekly:
-          // Check if any day in the month matches the due weekday
-          for (var day = monthStart;
-              day.isBefore(monthEnd.add(const Duration(days: 1)));
-              day = day.add(const Duration(days: 1))) {
-            if (day.weekday == reminder.dueDay) return true;
-          }
-          return false;
-        case ReminderRecurrence.monthly:
-          return reminder.dueDay <= monthEnd.day;
-        case ReminderRecurrence.yearly:
-          return reminder.startDate.month == month.month;
-        default:
-          return false;
-      }
-    }).toList();
+        if (!withinDateRange) return false;
+
+        switch (reminder.recurrence) {
+          case ReminderRecurrence.daily:
+            return true;
+          case ReminderRecurrence.weekly:
+            // Check if any day in the month matches the due weekday
+            for (var day = monthStart;
+                day.isBefore(monthEnd.add(const Duration(days: 1)));
+                day = day.add(const Duration(days: 1))) {
+              if (day.weekday == reminder.dueDay) return true;
+            }
+            return false;
+          case ReminderRecurrence.monthly:
+            return reminder.dueDay <= monthEnd.day;
+          case ReminderRecurrence.yearly:
+            return reminder.startDate.month == month.month;
+          default:
+            return false;
+        }
+      }).toList();
+    });
   }
 
   static List<Reminder> getRemindersForDay(

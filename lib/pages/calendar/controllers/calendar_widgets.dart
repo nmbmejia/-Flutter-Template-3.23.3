@@ -62,6 +62,7 @@ Widget buildHeader(List<Reminder> monthReminders) {
 
 Widget buildCalendar(
   BuildContext context,
+  List<Reminder> allReminders,
   DateTime month, {
   bool showPreviousMonthDays = false,
   required Animation<double> animation,
@@ -139,8 +140,8 @@ Widget buildCalendar(
             //* Non-exhaustive, only shows recurring reminders, that's why you pass all the original Reminders (allReminders) and not monthReminders variable.
             HomePageController homePageController =
                 Get.find<HomePageController>();
-            List<Reminder> remindersForDay = CustomFunctions.getRemindersForDay(
-                homePageController.allReminders, date);
+            List<Reminder> remindersForDay =
+                CustomFunctions.getRemindersForDay(allReminders, date);
 
             return AnimatedFadeInItem(
               index: index,

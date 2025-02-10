@@ -8,7 +8,6 @@ import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/go.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/widgets/animated_fade_in.dart';
-import 'package:Acorn/widgets/dialogs/custom.dart';
 import 'package:Acorn/widgets/icon_presenter.dart';
 import 'package:Acorn/widgets/string_extension.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class UpcomingReminders extends StatefulWidget {
-  const UpcomingReminders({super.key});
+  const UpcomingReminders({super.key, this.allReminders = const []});
+
+  final List<Reminder> allReminders;
 
   @override
   State<UpcomingReminders> createState() => _UpcomingRemindersState();
@@ -25,33 +26,26 @@ class UpcomingReminders extends StatefulWidget {
 class _UpcomingRemindersState extends State<UpcomingReminders> {
   HomePageController homePageController = Get.find<HomePageController>();
   RxBool showUpcomingOnly = true.obs;
-  RxList filteredReminders = [].obs;
+  RxList<Reminder> filteredReminders = <Reminder>[].obs;
+  RxList<Reminder> monthlyReminders = <Reminder>[].obs;
 
   @override
   void initState() {
     super.initState();
-    // Initial filter
+    getMonthlyReminders();
+  }
+
+  void getMonthlyReminders() async {
+    monthlyReminders.value = await CustomFunctions.getRemindersForMonth(
+        widget.allReminders, DateTime.now());
+    monthlyReminders.refresh();
     filterReminders(0);
-
-    // Add listeners to update filtered reminders when source lists change
-    ever(homePageController.monthReminders, (_) {
-      if (showUpcomingOnly.value) {
-        filterReminders(0);
-      }
-    });
-
-    ever(homePageController.allReminders, (_) {
-      if (!showUpcomingOnly.value) {
-        filterReminders(1);
-      }
-    });
   }
 
   void filterReminders(int index) {
     if (index == 0) {
       // Get all reminders due in the next 14 days
-      filteredReminders.value =
-          homePageController.monthReminders.where((reminder) {
+      filteredReminders.value = monthlyReminders.where((reminder) {
         final now = Constants.dateToday;
         final dueDate = DateTime(now.year, now.month, reminder.dueDay);
 
@@ -65,8 +59,10 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
         return adjustedDueDate.difference(now).inDays <= 14 &&
             adjustedDueDate.difference(now).inDays >= 0;
       }).toList();
+      filteredReminders.refresh();
     } else {
-      filteredReminders.value = homePageController.allReminders;
+      filteredReminders.value = widget.allReminders;
+      filteredReminders.refresh();
     }
   }
 
