@@ -6,11 +6,10 @@ import 'package:Acorn/services/app_colors.dart';
 import 'package:Acorn/services/constants.dart';
 import 'package:Acorn/services/custom_functions.dart';
 import 'package:Acorn/services/custom_text.dart';
-import 'package:Acorn/services/firestore/reminder_firestore_service.dart';
 import 'package:Acorn/services/spacings.dart';
 import 'package:Acorn/widgets/animated_fade_in.dart';
 import 'package:Acorn/widgets/custom_input.dart';
-import 'package:Acorn/widgets/custom_snackbar.dart';
+import 'package:Acorn/widgets/dialogs/custom.dart';
 import 'package:Acorn/widgets/icon_presenter.dart';
 import 'package:Acorn/widgets/string_extension.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,25 +64,30 @@ class _EditState extends State<Edit> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Custom.header2(''),
-                          GestureDetector(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.lightGrayColor,
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.close,
-                                  size: 30,
-                                  color: AppColors.whiteColor,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.lightGrayColor,
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 30,
+                                      color: AppColors.whiteColor,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           )
                         ],
                       ),
@@ -199,8 +203,12 @@ class _EditState extends State<Edit> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
                                     child: CustomInput(
-                                      text: '',
-                                      hintText: '',
+                                      text: widget.paymentAmount
+                                              ?.toMonetaryFormat() ??
+                                          '',
+                                      hintText: widget.paymentAmount
+                                              ?.toMonetaryFormat() ??
+                                          '',
                                       onTextChanged: (data) {
                                         editController.specifiedAmount =
                                             double.tryParse(data as String) ??
@@ -220,7 +228,8 @@ class _EditState extends State<Edit> {
                                           widget.reminder.userEmail,
                                           widget.reminder.id,
                                           widget.reminder.amount ?? 0,
-                                          Constants.dateToday);
+                                          Constants.dateToday,
+                                          widget.boxDate);
                                     },
                                     child: Container(
                                       width: MediaQuery.of(context).size.width *
@@ -247,10 +256,11 @@ class _EditState extends State<Edit> {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      editController.deletePayment(
-                                          widget.reminder.userEmail,
-                                          widget.reminder.id,
-                                          Constants.dateToday);
+                                      editController.markAsUnpaid(
+                                        widget.reminder.userEmail,
+                                        widget.reminder.id,
+                                        widget.boxDate,
+                                      );
                                     },
                                     child: Container(
                                       width: MediaQuery.of(context).size.width *
@@ -349,6 +359,27 @@ class _EditState extends State<Edit> {
                         ),
                       ),
 
+                      GestureDetector(
+                        onTap: () {
+                          CustomDialog.generic(context,
+                              title: 'Delete all payments',
+                              content:
+                                  'This will delete all instances of this reminder and all associated payments.',
+                              withActions: true, onOk: () {
+                            editController.deleteReminder(
+                              widget.reminder.userEmail,
+                              widget.reminder.id,
+                            );
+                          });
+                        },
+                        child: Center(
+                          child: Icon(
+                            CupertinoIcons.delete_simple,
+                            size: 25,
+                            color: AppColors.redColor.withOpacity(0.9),
+                          ),
+                        ),
+                      ),
                       VertSpace.fifteen(),
                       VertSpace.thirty(),
                     ],

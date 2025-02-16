@@ -1,6 +1,6 @@
 class Strings {
   //
-  static const appName = 'Acorn';
+  static const appName = 'Hoypay';
   static const myCalendar = 'My Calendar';
   static const everyYear = 'Every year';
   static const everyMonth = 'Every month';

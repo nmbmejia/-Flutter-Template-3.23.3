@@ -9,7 +9,7 @@ class EditController extends GetxController {
   double specifiedAmount = 0;
 
   void markAsPaid(bool isFixed, String userEmail, String reminderId,
-      double fixAmount, DateTime date) async {
+      double fixAmount, DateTime paidDate, DateTime dueDate) async {
     if (specifiedAmount < 1 && !isFixed) {
       CustomSnackbar().simple('Amount cannot be less than 1.');
       return;
@@ -18,23 +18,38 @@ class EditController extends GetxController {
     final success = await ReminderFirestoreService().addPayment(
         userEmail,
         reminderId,
-        Payment(amount: isFixed ? fixAmount : specifiedAmount, date: date));
+        Payment(
+            amount: isFixed ? fixAmount : specifiedAmount,
+            paidDate: paidDate,
+            dueDate: dueDate));
     if (success) {
       CustomSnackbar().simple(
           'Marked as paid (${Constants.currency}${isFixed ? fixAmount.toMonetaryFormat() : specifiedAmount.toMonetaryFormat()})');
     } else {
-      CustomSnackbar().simple('Failed to add payment');
+      CustomSnackbar().simple('Cannot add payment');
     }
   }
 
-  void deletePayment(String userEmail, String reminderId, DateTime date) async {
+  void markAsUnpaid(
+      String userEmail, String reminderId, DateTime dueDate) async {
     Get.back();
     final success = await ReminderFirestoreService()
-        .deletePayment(userEmail, reminderId, date);
+        .removePayment(userEmail, reminderId, dueDate);
     if (success) {
       CustomSnackbar().simple('Marked as unpaid.');
     } else {
-      CustomSnackbar().simple('Failed to delete payment');
+      CustomSnackbar().simple('Cannot delete payment');
+    }
+  }
+
+  void deleteReminder(String userEmail, String reminderId) async {
+    Get.back();
+    final success =
+        await ReminderFirestoreService().deleteReminder(userEmail, reminderId);
+    if (success) {
+      CustomSnackbar().simple('Deleted reminder.');
+    } else {
+      CustomSnackbar().simple('Cannot delete reminder');
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:Acorn/models/consolidated_reminder_model.dart';
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/calendar/controllers/calendar_controller.dart';
 import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
@@ -20,17 +19,7 @@ import 'package:intl/intl.dart';
 
 final CalendarController calendarController = Get.find<CalendarController>();
 
-Widget buildHeader(List<Reminder> monthReminders) {
-  double total = 0;
-
-  // Get total from monthly reminders
-  for (Reminder reminder in monthReminders) {
-    total += reminder.amount ?? 0;
-  }
-
-  // Add payments made this month
-  total += calendarController.totalMonthAmount.value;
-
+Widget buildHeader(double totalAmount) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.end,
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +40,7 @@ Widget buildHeader(List<Reminder> monthReminders) {
           Custom.subheader1('Total: ',
               color: AppColors.lightGrayColor, isBold: true),
           Custom.subheader1(
-            Currency.format(total),
+            Currency.format(totalAmount),
             isBold: true,
           ),
         ],
@@ -107,71 +96,74 @@ Widget buildCalendar(
                 ));
           }),
       VertSpace.eight(),
-      GridView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 7,
-          crossAxisSpacing: 2.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: deviceAspect,
-        ),
-        // Calculating the total number of cells required in the grid
-        itemCount: daysInMonth + weekdayOfFirstDay - 1,
-        itemBuilder: (context, index) {
-          if (index < weekdayOfFirstDay - 1) {
-            // Displaying dates from the previous month in grey
-            return showPreviousMonthDays
-                ? Container(
-                    decoration: BoxDecoration(
-                        color: AppColors.darkGrayColor.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(10)),
-                  )
-                : const SizedBox();
-          } else {
-            // Displaying the current month's days
-            DateTime date = DateTime(
-                month.year, month.month, index - weekdayOfFirstDay + 2);
-            String text = date.day.toString();
-            bool isSelected =
-                text == calendarController.currentDate.value.day.toString();
+      GetBuilder<CalendarController>(
+          builder: (calendarController) => GridView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  crossAxisSpacing: 2.0,
+                  mainAxisSpacing: 10.0,
+                  childAspectRatio: deviceAspect,
+                ),
+                // Calculating the total number of cells required in the grid
+                itemCount: daysInMonth + weekdayOfFirstDay - 1,
+                itemBuilder: (context, index) {
+                  if (index < weekdayOfFirstDay - 1) {
+                    // Displaying dates from the previous month in grey
+                    return showPreviousMonthDays
+                        ? Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.darkGrayColor.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(10)),
+                          )
+                        : const SizedBox();
+                  } else {
+                    // Displaying the current month's days
+                    DateTime date = DateTime(
+                        month.year, month.month, index - weekdayOfFirstDay + 2);
+                    String text = date.day.toString();
+                    Rx<DateTime> currentDate = calendarController.currentDate;
+                    bool isSelected = text ==
+                        calendarController.currentDate.value.day.toString();
 
-            // --------------------------- Filter reminders for this specific day based on due day and recurrence
-            //* Non-exhaustive, only shows recurring reminders, that's why you pass all the original Reminders (allReminders) and not monthReminders variable.
-            HomePageController homePageController =
-                Get.find<HomePageController>();
-            List<Reminder> remindersForDay =
-                CustomFunctions.getRemindersForDay(allReminders, date);
+                    // --------------------------- Filter reminders for this specific day based on due day and recurrence
+                    //* Non-exhaustive, only shows recurring reminders, that's why you pass all the original Reminders (allReminders) and not monthReminders variable.
+                    HomePageController homePageController =
+                        Get.find<HomePageController>();
+                    List<Reminder> remindersForDay =
+                        CustomFunctions.getRemindersForDay(allReminders, date);
 
-            return AnimatedFadeInItem(
-              index: index,
-              delayInMs: 10,
-              child: GestureDetector(
-                  onTapDown: (v) {
-                    calendarController.currentDate.value = DateTime(
-                        calendarController.currentDate.value.year,
-                        calendarController.currentDate.value.month,
-                        int.tryParse(text) ?? 0);
-                    calendarController.currentDate.refresh();
+                    return AnimatedFadeInItem(
+                      index: index,
+                      delayInMs: 10,
+                      child: GestureDetector(
+                          onTapDown: (v) {
+                            calendarController.currentDate.value = DateTime(
+                                calendarController.currentDate.value.year,
+                                calendarController.currentDate.value.month,
+                                int.tryParse(text) ?? 0);
+                            calendarController.currentDate.refresh();
+                            calendarController.update();
 
-                    debugPrint(
-                        'Clicked $text day, value of current date is ${calendarController.currentDate.value}');
-                  },
-                  child: dayBox(
-                      // boxDate: calendarController.currentDate.value,
-                      boxDate: date,
-                      servicesSubscribedThisDay: remindersForDay,
-                      isSelected: isSelected,
-                      deviceAspect: deviceAspect,
-                      text: text,
-                      animation: animation,
-                      holdTimer: holdTimer,
-                      holdAnimation: holdAnimation,
-                      exitAnimation: exitAnimation)),
-            );
-          }
-        },
-      )
+                            debugPrint(
+                                'Clicked $text day, value of current date is ${calendarController.currentDate.value}');
+                          },
+                          child: dayBox(
+                              // boxDate: calendarController.currentDate.value,
+                              boxDate: date,
+                              servicesSubscribedThisDay: remindersForDay,
+                              isSelected: isSelected,
+                              deviceAspect: deviceAspect,
+                              text: text,
+                              animation: animation,
+                              holdTimer: holdTimer,
+                              holdAnimation: holdAnimation,
+                              exitAnimation: exitAnimation)),
+                    );
+                  }
+                },
+              ))
     ],
   );
 }
@@ -199,6 +191,12 @@ Widget dayBox({
           ? 0
           : servicesSubscribedThisDay.length;
 
+  bool hasPaymentBeenMadeForFirstService =
+      (servicesSubscribedThisDay?.firstOrNull) == null
+          ? false
+          : CustomFunctions.hasPaymentBeenMade(
+              servicesSubscribedThisDay!.firstOrNull!, boxDate);
+
   return Transform(
     transform: isSelected
         ? (Matrix4.identity()
@@ -210,9 +208,10 @@ Widget dayBox({
         if (isSelected) {
           holdAnimation();
           holdTimer = Timer(const Duration(milliseconds: 250), () {
-            CustomDialog.showServices(boxDate, servicesSubscribedThisDay ?? [],
-                total: CustomFunctions.getTotalAmountForSubscriptions(
-                    servicesSubscribedThisDay ?? []));
+            CustomDialog.showServices(
+              boxDate,
+              servicesSubscribedThisDay ?? [],
+            );
             exitAnimation();
           });
         }
@@ -256,10 +255,17 @@ Widget dayBox({
                                 Center(
                                   child: Container(
                                     margin: const EdgeInsets.only(right: 12),
-                                    child: IconPresenter(
-                                      icon: CustomFunctions.getIconForReminder(
-                                          servicesSubscribedThisDay.first),
-                                      size: deviceAspect * 24,
+                                    child: Opacity(
+                                      opacity: hasPaymentBeenMadeForFirstService
+                                          ? 0.5
+                                          : 1,
+                                      child: IconPresenter(
+                                        icon:
+                                            CustomFunctions.getIconForReminder(
+                                                servicesSubscribedThisDay
+                                                    .first),
+                                        size: deviceAspect * 24,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -285,10 +291,14 @@ Widget dayBox({
                               ],
                             )
                           //? IF JUST ONE
-                          : IconPresenter(
-                              icon: CustomFunctions.getIconForReminder(
-                                  servicesSubscribedThisDay.first),
-                              size: deviceAspect * 22,
+                          : Opacity(
+                              opacity:
+                                  hasPaymentBeenMadeForFirstService ? 0.5 : 1,
+                              child: IconPresenter(
+                                icon: CustomFunctions.getIconForReminder(
+                                    servicesSubscribedThisDay.first),
+                                size: deviceAspect * 22,
+                              ),
                             )
                       : const SizedBox(),
                 )),

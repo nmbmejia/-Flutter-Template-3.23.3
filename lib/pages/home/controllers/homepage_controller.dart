@@ -8,6 +8,7 @@ class HomePageController extends GetxController {
   InitialController initialController = Get.find<InitialController>();
   RxBool anyDialogOpen = false.obs;
   RxInt selectedHeader = 0.obs;
+  RxBool showUpcomingOnly = true.obs;
 
   @override
   void onInit() {

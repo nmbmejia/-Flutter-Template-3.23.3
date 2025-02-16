@@ -9,7 +9,7 @@ class CustomSnackbar {
       content,
       fullWidth: false,
       backgroundColor: AppColors.whiteColor,
-      textStyle: const TextStyle(
+      textStyle: TextStyle(
         color: AppColors.primaryColor,
         fontSize: 13,
         fontWeight: FontWeight.w400,

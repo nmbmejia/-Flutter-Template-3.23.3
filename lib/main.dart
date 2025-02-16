@@ -1,5 +1,6 @@
 import 'package:Acorn/firebase_options.dart';
 import 'package:Acorn/pages/initial/initial.dart';
+import 'package:Acorn/services/controllers/theme_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:Acorn/services/theme_service.dart';
 
 //  fvm flutter pub global run rename setAppName --value "projectname"  --rename package
 Future<void> main() async {
@@ -30,7 +31,7 @@ class MyApp extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
-  static const String name = 'Acorn';
+  static const String name = 'Hoypay';
   static const Color mainColor = Colors.deepPurple;
 
   @override
@@ -40,6 +41,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    Get.put(ThemeController());
+
     FirebaseFirestore.instance.settings =
         const Settings(persistenceEnabled: true);
 
@@ -61,6 +64,12 @@ class _MyAppState extends State<MyApp> {
       locale: const Locale('fil', ''),
       child: GetMaterialApp(
         navigatorKey: MyApp.navigatorKey,
+        theme: ThemeService.lightTheme,
+        darkTheme: ThemeService.darkTheme,
+        // themeMode: Get.find<ThemeController>().isDarkMode
+        //     ? ThemeMode.dark
+        //     : ThemeMode.light,
+        themeMode: ThemeMode.dark,
         scrollBehavior: const MaterialScrollBehavior().copyWith(
           dragDevices: {
             PointerDeviceKind.mouse,
@@ -77,12 +86,6 @@ class _MyAppState extends State<MyApp> {
           Locale('es', 'ES'),
         ],
         title: 'Acorn',
-        theme: ThemeData(
-          textTheme: GoogleFonts.latoTextTheme(
-            Theme.of(context)
-                .textTheme, // If this is not set, then ThemeData.light().textTheme is used.
-          ),
-        ),
         home: const InitialPage(),
       ),
     );

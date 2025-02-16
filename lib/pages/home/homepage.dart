@@ -18,6 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:Acorn/services/controllers/theme_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,7 +43,6 @@ class _HomePageState extends State<HomePage> {
     return GetBuilder<HomePageController>(builder: (homepageController) {
       final CalendarController calendarController =
           Get.find<CalendarController>();
-      List<Reminder> allReminders;
       return Scaffold(
         backgroundColor: AppColors.primaryColor,
         body: SingleChildScrollView(
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   //? All reminders in the database
-                  allReminders = snapshot.hasData
+                  List<Reminder> allReminders = snapshot.hasData
                       ? snapshot.data!.docs
                           .map((doc) => Reminder.fromFirestore(doc))
                           .toList()
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                               return Container(
                                 width: 50,
                                 height: 50,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.lightGrayColor,
                                 ),
@@ -135,15 +135,17 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       VertSpace.fifteen(),
-                      const Divider(
+                      Divider(
                         color: AppColors.lightGrayColor,
                       ),
                       VertSpace.thirty(),
-                      CustomCalendar(
-                        allReminders: allReminders,
-                        type: homepageController.selectedHeader.value == 0
-                            ? CalendarState.monthly
-                            : CalendarState.oneTime,
+                      Obx(
+                        () => CustomCalendar(
+                          allReminders: allReminders,
+                          type: homepageController.selectedHeader.value == 0
+                              ? CalendarState.monthly
+                              : CalendarState.oneTime,
+                        ),
                       ),
                       UpcomingReminders(allReminders: allReminders),
                       VertSpace.thirty(),
@@ -151,11 +153,9 @@ class _HomePageState extends State<HomePage> {
                       VertSpace.thirty(),
                       Opacity(
                         opacity: 0.9,
-                        child: Image.asset(
-                          'assets/images/acorn.png',
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.cover,
+                        child: CircleAvatar(
+                          radius: 9,
+                          backgroundImage: AssetImage('assets/icon/icon.png'),
                         ),
                       ),
                       Custom.body2('v1.0.0')
@@ -184,6 +184,30 @@ class _HomePageState extends State<HomePage> {
         0,
       ),
       items: [
+        // PopupMenuItem(
+        //   value: 'dark_mode',
+        //   child: Row(
+        //     children: [
+        //       Icon(
+        //         Get.find<ThemeController>().isDarkMode
+        //             ? Icons.light_mode
+        //             : Icons.dark_mode,
+        //         color: Colors.black87,
+        //       ),
+        //       const SizedBox(width: 15),
+        //       Text(
+        //         Get.find<ThemeController>().isDarkMode
+        //             ? 'Light Mode'
+        //             : 'Dark Mode',
+        //         style: TextStyle(
+        //           fontSize: 16,
+        //           fontWeight: FontWeight.bold,
+        //           color: Colors.grey[700], // Adjust as per the design
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         PopupMenuItem(
           value: 'logout',
           child: Row(

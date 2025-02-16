@@ -48,11 +48,9 @@ class _LoginPageState extends State<LoginPage> {
                   delayInMs: 450,
                   child: Opacity(
                     opacity: 0.9,
-                    child: Image.asset(
-                      'assets/images/acorn.png',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('assets/icon/icon.png'),
                     ),
                   ),
                 ),
@@ -213,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Container(
                                 width: 50,
                                 height: 50,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.lightGrayColor,
                                 ),

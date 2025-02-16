@@ -3,6 +3,7 @@ import 'package:Acorn/pages/home/controllers/homepage_controller.dart';
 import 'package:Acorn/pages/initial/auth/login.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
 import 'package:Acorn/services/app_colors.dart';
+import 'package:Acorn/services/controllers/theme_controller.dart';
 import 'package:Acorn/services/custom_text.dart';
 import 'package:Acorn/services/loader.dart';
 import 'package:Acorn/services/strings.dart';

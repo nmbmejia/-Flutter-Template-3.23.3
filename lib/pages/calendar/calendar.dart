@@ -53,6 +53,7 @@ class _CustomCalendarState extends State<CustomCalendar>
   final HomePageController homePageController = Get.find<HomePageController>();
 
   RxList<Reminder> monthlyReminders = <Reminder>[].obs;
+  RxDouble totalAmount = 0.0.obs;
 
   //? FOR ANIMATIONS
   Timer? holdTimer;
@@ -65,7 +66,9 @@ class _CustomCalendarState extends State<CustomCalendar>
 
   void getMonthlyReminders() async {
     monthlyReminders.value = await CustomFunctions.getRemindersForMonth(
-        widget.allReminders, DateTime.now());
+        widget.allReminders, calendarController.currentDate.value);
+    totalAmount.value = await CustomFunctions.getTotalAmountForSubscriptions(
+        monthlyReminders, calendarController.currentDate.value);
   }
 
   @override
@@ -88,6 +91,14 @@ class _CustomCalendarState extends State<CustomCalendar>
         setState(() => offset = animation.value);
       });
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CustomCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.allReminders != widget.allReminders) {
+      getMonthlyReminders();
+    }
   }
 
   void holdAnimation() {
@@ -115,47 +126,46 @@ class _CustomCalendarState extends State<CustomCalendar>
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          buildHeader(monthlyReminders),
-          VertSpace.thirty(),
-          AspectRatio(
-              aspectRatio: MediaQuery.of(context).size.width /
-                  (MediaQuery.of(context).size.height / 2),
-              child: PageView.builder(
-                pageSnapping: true,
-                controller: calendarController.pageController.value,
-                onPageChanged: (index) {
-                  // Calculate the current date based on the page index
-                  calendarController.currentDate.value = DateTime(
-                    Constants.dateToday.year +
-                        (index ~/ 12), // Increment year correctly
-                    (index % 12) + 1, // Get the correct month
-                    1,
-                  );
-                },
-                itemCount: 12 * 2, // Show 2 years (24 months)
-                itemBuilder: (context, pageIndex) {
-                  // Calculate the correct month and year for each page
-                  DateTime month = DateTime(
-                    Constants.dateToday.year +
-                        (pageIndex ~/ 12), // Calculate the correct year
-                    (pageIndex % 12) + 1, // Calculate the correct month
-                    1,
-                  );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Obx(() => buildHeader(totalAmount.value)),
+        VertSpace.thirty(),
+        AspectRatio(
+            aspectRatio: MediaQuery.of(context).size.width /
+                (MediaQuery.of(context).size.height / 2),
+            child: PageView.builder(
+              pageSnapping: true,
+              controller: calendarController.pageController.value,
+              onPageChanged: (index) async {
+                // Calculate the current date based on the page index
+                calendarController.currentDate.value = DateTime(
+                  Constants.dateToday.year +
+                      (index ~/ 12), // Increment year correctly
+                  (index % 12) + 1, // Get the correct month
+                  1,
+                );
+                getMonthlyReminders();
+              },
+              itemCount: 12 * 2, // Show 2 years (24 months)
+              itemBuilder: (context, pageIndex) {
+                // Calculate the correct month and year for each page
+                DateTime month = DateTime(
+                  Constants.dateToday.year +
+                      (pageIndex ~/ 12), // Calculate the correct year
+                  (pageIndex % 12) + 1, // Calculate the correct month
+                  1,
+                );
 
-                  return buildCalendar(context, widget.allReminders, month,
-                      animation: animation,
-                      holdAnimation: holdAnimation,
-                      exitAnimation: exitAnimation,
-                      showPreviousMonthDays: true);
-                },
-              )),
-          // const Visibility(visible: false, child: ClickableLegends())
-        ],
-      ),
+                return buildCalendar(context, widget.allReminders, month,
+                    animation: animation,
+                    holdAnimation: holdAnimation,
+                    exitAnimation: exitAnimation,
+                    showPreviousMonthDays: true);
+              },
+            )),
+        // const Visibility(visible: false, child: ClickableLegends())
+      ],
     );
   }
 }

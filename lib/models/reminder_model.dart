@@ -32,24 +32,32 @@ class SharedInfo {
 
 class Payment {
   final double amount;
-  final DateTime date;
+  final DateTime paidDate;
+  final DateTime dueDate;
 
   Payment({
     required this.amount,
-    required this.date,
+    required this.paidDate,
+    required this.dueDate,
   });
 
   factory Payment.fromMap(Map<String, dynamic> map) {
     return Payment(
       amount: map['amount']?.toDouble() ?? 0.0,
-      date: (map['date'] as Timestamp).toDate(),
+      paidDate: map['paidDate'] != null
+          ? (map['paidDate'] as Timestamp).toDate()
+          : DateTime.now(),
+      dueDate: map['dueDate'] != null
+          ? (map['dueDate'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'amount': amount,
-      'date': Timestamp.fromDate(date),
+      'paidDate': paidDate != null ? Timestamp.fromDate(paidDate) : null,
+      'dueDate': dueDate != null ? Timestamp.fromDate(dueDate) : null,
     };
   }
 }

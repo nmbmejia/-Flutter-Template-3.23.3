@@ -32,7 +32,7 @@ class CustomDialog {
           title: Custom.header4(title,
               isBold: false, color: AppColors.primaryColor),
           content: Custom.body1(content,
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
               isBold: false,
               color: AppColors.primaryColor),
           actions: withActions
@@ -65,8 +65,10 @@ class CustomDialog {
     );
   }
 
-  static showServices(DateTime boxDate, List<Reminder> subscribedServices,
-      {double total = 0}) {
+  static showServices(
+      DateTime boxDate, List<Reminder> subscribedServices) async {
+    double totalAmount = await CustomFunctions.getTotalAmountForSubscriptions(
+        subscribedServices, boxDate);
     return showGeneralDialog(
       barrierDismissible: true,
       barrierLabel: '',
@@ -82,7 +84,7 @@ class CustomDialog {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  header(total: total),
+                  header(total: totalAmount),
                   VertSpace.eight(),
                   Container(
                       width: 300,

@@ -25,7 +25,6 @@ class UpcomingReminders extends StatefulWidget {
 
 class _UpcomingRemindersState extends State<UpcomingReminders> {
   HomePageController homePageController = Get.find<HomePageController>();
-  RxBool showUpcomingOnly = true.obs;
   RxList<Reminder> filteredReminders = <Reminder>[].obs;
   RxList<Reminder> monthlyReminders = <Reminder>[].obs;
 
@@ -35,11 +34,19 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
     getMonthlyReminders();
   }
 
+  @override
+  void didUpdateWidget(UpcomingReminders oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.allReminders != widget.allReminders) {
+      getMonthlyReminders();
+    }
+  }
+
   void getMonthlyReminders() async {
     monthlyReminders.value = await CustomFunctions.getRemindersForMonth(
         widget.allReminders, DateTime.now());
     monthlyReminders.refresh();
-    filterReminders(0);
+    filterReminders(homePageController.showUpcomingOnly.value ? 0 : 1);
   }
 
   void filterReminders(int index) {
@@ -68,6 +75,7 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('UpcmingWidget rebuild');
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -80,7 +88,7 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
                     ToggleButtons(
                       direction: Axis.horizontal,
                       onPressed: (int index) {
-                        showUpcomingOnly.value = index == 0;
+                        homePageController.showUpcomingOnly.value = index == 0;
                         filterReminders(index);
                       },
                       borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -93,16 +101,16 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
                         minWidth: 100.0,
                       ),
                       isSelected: [
-                        showUpcomingOnly.value,
-                        !showUpcomingOnly.value
+                        homePageController.showUpcomingOnly.value,
+                        !homePageController.showUpcomingOnly.value
                       ],
                       children: [
                         Custom.body1('Upcoming',
-                            color: showUpcomingOnly.value
+                            color: homePageController.showUpcomingOnly.value
                                 ? AppColors.primaryColor
                                 : AppColors.whiteSecondaryColor),
                         Custom.body1('All',
-                            color: !showUpcomingOnly.value
+                            color: !homePageController.showUpcomingOnly.value
                                 ? AppColors.primaryColor
                                 : AppColors.whiteSecondaryColor),
                       ],
@@ -119,7 +127,7 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
                           height: 5,
                         ),
                         Custom.body2(
-                            showUpcomingOnly.value
+                            homePageController.showUpcomingOnly.value
                                 ? 'No upcoming payments'
                                 : 'No payments due this month',
                             color: Colors.grey),
@@ -136,7 +144,7 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
                                   const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Obx(
                                 () => Custom.body2(
-                                    showUpcomingOnly.value
+                                    homePageController.showUpcomingOnly.value
                                         ? 'Payments due in two weeks'
                                         : 'Payments due this ${DateFormat('MMMM').format(Constants.dateToday)}',
                                     color: Colors.grey),
@@ -150,7 +158,7 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
                           () {
                             var reminders =
                                 List<Reminder>.from(filteredReminders);
-                            if (!showUpcomingOnly.value) {
+                            if (!homePageController.showUpcomingOnly.value) {
                               reminders.sort((a, b) {
                                 DateTime dateA = DateTime(
                                     Constants.dateToday.year,
@@ -176,11 +184,11 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
 
                                 bool hasPaymentBeenMade =
                                     CustomFunctions.hasPaymentBeenMade(
-                                        reminder, Constants.dateToday);
+                                        reminder, dueDate);
                                 // Payment amount returns null if no payment has been made
                                 double? paymentAmount =
                                     CustomFunctions.howMuchPaymentBeenMade(
-                                        reminder, Constants.dateToday);
+                                        reminder, dueDate);
 
                                 return AnimatedFadeInItem(
                                   index: index,
@@ -257,7 +265,8 @@ class _UpcomingRemindersState extends State<UpcomingReminders> {
                                                             color: AppColors
                                                                 .greenColor)
                                                         : const SizedBox(),
-                                                showUpcomingOnly.value
+                                                homePageController
+                                                        .showUpcomingOnly.value
                                                     ? Custom.body2(
                                                         daysBetween(
                                                                     DateTime

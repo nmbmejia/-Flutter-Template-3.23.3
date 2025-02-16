@@ -2,7 +2,6 @@
 
 import 'package:Acorn/models/reminder_model.dart';
 import 'package:Acorn/pages/initial/controllers/intial_controller.dart';
-import 'package:Acorn/services/firestore/reminder_firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -104,14 +103,29 @@ class CustomFunctions {
     }).toList();
   }
 
-  static double getTotalAmountForSubscriptions(List<Reminder> reminders) {
-    return reminders.fold(0.0, (total, reminder) => total + reminder.amount!);
+  static Future<double> getTotalAmountForSubscriptions(
+      List<Reminder> reminders, DateTime date) async {
+    double value = 0;
+    for (var reminder in reminders) {
+      if (reminder.amount == null || reminder.amount == 0) {
+        value += reminder.payments
+                .firstWhereOrNull((payment) =>
+                    payment.dueDate.year == date.year &&
+                    payment.dueDate.month == date.month)
+                ?.amount ??
+            0;
+      } else {
+        value += reminder.amount ?? 0;
+      }
+    }
+    return value;
   }
 
   // returns true if payment has been made on the date
   static bool hasPaymentBeenMade(Reminder reminder, DateTime date) {
     final payment = reminder.payments.firstWhereOrNull((payment) {
-      return payment.date.year == date.year && payment.date.month == date.month;
+      return payment.dueDate.year == date.year &&
+          payment.dueDate.month == date.month;
     });
 
     return payment != null;
@@ -119,12 +133,14 @@ class CustomFunctions {
 
   static DateTime? whenPaymentBeenMade(Reminder reminder, DateTime date) {
     final payment = reminder.payments.firstWhereOrNull((payment) {
-      return payment.date.year == date.year && payment.date.month == date.month;
+      return payment.dueDate.year == date.year &&
+          payment.dueDate.month == date.month;
     });
 
     if (payment == null) return null;
 
-    return DateTime(payment.date.year, payment.date.month, payment.date.day);
+    return DateTime(
+        payment.dueDate.year, payment.dueDate.month, payment.dueDate.day);
   }
 
   // returns the amount of payment made on the date, null if no payment has been made
@@ -134,7 +150,8 @@ class CustomFunctions {
     }
 
     final payment = reminder.payments.firstWhereOrNull((payment) {
-      return payment.date.year == date.year && payment.date.month == date.month;
+      return payment.dueDate.year == date.year &&
+          payment.dueDate.month == date.month;
     });
 
     return payment?.amount;
@@ -144,7 +161,7 @@ class CustomFunctions {
   static bool hasMadeAnyPayment(List<Reminder> reminders, DateTime date) {
     for (var reminder in reminders) {
       for (var payment in reminder.payments) {
-        if (DateUtils.isSameDay(payment.date, date)) {
+        if (DateUtils.isSameDay(payment.dueDate, date)) {
           return true;
         }
       }

@@ -62,7 +62,7 @@ class _AddState extends State<Add> {
                             child: Container(
                               width: 50,
                               height: 50,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: AppColors.lightGrayColor,
                               ),
@@ -204,7 +204,7 @@ class _AddState extends State<Add> {
                           child: Container(
                             width: 60,
                             height: 60,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.lightGrayColor,
                             ),

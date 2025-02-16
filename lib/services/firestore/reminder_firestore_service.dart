@@ -96,8 +96,8 @@ class ReminderFirestoreService {
     }
   }
 
-  Future<bool> deletePayment(
-      String userEmail, String reminderId, DateTime date) async {
+  Future<bool> removePayment(
+      String userEmail, String reminderId, DateTime dueDate) async {
     try {
       final docRef = FirebaseFirestore.instance
           .collection('users')
@@ -111,17 +111,36 @@ class ReminderFirestoreService {
         return false;
       }
 
-      // Get existing payments and remove matching date
+      // Get existing payments and add new one
       List<dynamic> payments = doc.data()?['payments'] ?? [];
       payments.removeWhere((payment) {
-        final paymentDate = (payment['date'] as Timestamp).toDate();
-        return paymentDate.year == date.year &&
-            paymentDate.month == date.month &&
-            paymentDate.day == date.day;
+        final paymentDueDate = payment['dueDate'] is Timestamp
+            ? DateTime.parse(payment['dueDate'].toDate().toString())
+            : DateTime.parse(payment['dueDate']);
+        return paymentDueDate.year == dueDate.year &&
+            paymentDueDate.month == dueDate.month &&
+            paymentDueDate.day == dueDate.day;
       });
 
       // Update document with new payments array
       await docRef.update({'payments': payments});
+      return true;
+    } catch (e) {
+      debugPrint('Error removing payment: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteReminder(String userEmail, String reminderId) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userEmail)
+          .collection('reminders')
+          .doc(reminderId);
+
+      // Delete the reminder document
+      await docRef.delete();
       return true;
     } catch (e) {
       debugPrint('Error deleting payment: $e');
